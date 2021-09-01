@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AirlineCompanyRepository;
@@ -30,6 +32,16 @@ class AirlineCompany
      */
     private $headquarters;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Airplane::class, mappedBy="airlineCompany")
+     */
+    private $airplanes;
+
+    public function __construct()
+    {
+        $this->airplanes = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,6 +67,36 @@ class AirlineCompany
     public function setHeadquarters(string $headquarters): self
     {
         $this->headquarters = $headquarters;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Airplane[]
+     */
+    public function getAirplanes(): Collection
+    {
+        return $this->airplanes;
+    }
+
+    public function addAirplane(Airplane $airplane): self
+    {
+        if (!$this->airplanes->contains($airplane)) {
+            $this->airplanes[] = $airplane;
+            $airplane->setAirlineCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAirplane(Airplane $airplane): self
+    {
+        if ($this->airplanes->removeElement($airplane)) {
+            // set the owning side to null (unless already changed)
+            if ($airplane->getAirlineCompany() === $this) {
+                $airplane->setAirlineCompany(null);
+            }
+        }
 
         return $this;
     }

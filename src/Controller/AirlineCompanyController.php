@@ -27,6 +27,9 @@ class AirlineCompanyController extends AbstractController
         $airlineCompany->setCarrierName($payload->carrierName)
             ->setHeadquarters($payload->headQuarters);
 
+        $entityManager->persist($airlineCompany);
+        $entityManager->flush();
+
         return $this->json([
             'success'   =>  true,
             'message'   =>  'New Airline Company',
