@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: "Airline Service"
+  description: "An api for airline serive platform"
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/
+
+paths:
+  /airline-company/new:
+    get:
+      tags:
+        - Airline Company
+      description: Endpoint to create new airline company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carrierName:
+                  type: string
+                  example: New Carrier
+                headquarters:
+                  type: string
+                  example: New Headquarters
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true 
+                  message:
+                    type: string
+                    example: 'New airlines has been created'
+                  data:
+                    type: object
+                    example: {
+                      "carrierName": "sample carrier name",
+                      "headquarters": "sample headquarters"
+                    }
+    
+          
+          
