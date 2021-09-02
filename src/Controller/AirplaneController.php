@@ -34,7 +34,7 @@ class AirplaneController extends AbstractController
 
         return $this->json([
             'success'   =>  true,
-            'message'   =>  'New Aiplane Company',
+            'message'   =>  'New airplane has been created',
             'data'      =>  [
                 'brand'   =>  $airplane->getBrand(),
                 'model'   =>  $airplane->getModel(),

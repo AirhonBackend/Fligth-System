@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PassengerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,16 @@ class Passenger
      * @ORM\Column(type="string", length=255)
      */
     private $gender;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FlightSeat::class, mappedBy="passenger")
+     */
+    private $flightSeats;
+
+    public function __construct()
+    {
+        $this->flightSeats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,4 +118,35 @@ class Passenger
 
         return $this;
     }
+
+    /**
+     * @return Collection|FlightSeat[]
+     */
+    public function getFlightSeats(): Collection
+    {
+        return $this->flightSeats;
+    }
+
+    public function addFlightSeat(FlightSeat $flightSeat): self
+    {
+        if (!$this->flightSeats->contains($flightSeat)) {
+            $this->flightSeats[] = $flightSeat;
+            $flightSeat->setPassenger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFlightSeat(FlightSeat $flightSeat): self
+    {
+        if ($this->flightSeats->removeElement($flightSeat)) {
+            // set the owning side to null (unless already changed)
+            if ($flightSeat->getPassenger() === $this) {
+                $flightSeat->setPassenger(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

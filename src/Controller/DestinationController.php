@@ -27,7 +27,7 @@ class DestinationController extends AbstractController
 
         return $this->json([
             'success'   =>  true,
-            'message'   =>  'New Passenger',
+            'message'   =>  'New destination has been created',
             'data'      =>  [
                 'name'     =>  $destination->getName(),
             ]

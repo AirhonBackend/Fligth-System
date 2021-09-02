@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\AirplaneRepository;
+use App\Repository\FlightSeatClassesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=AirplaneRepository::class)
+ * @ORM\Entity(repositoryClass=FlightSeatClassesRepository::class)
  */
-class Airplane
+class FlightSeatClasses
 {
     /**
      * @ORM\Id
@@ -20,23 +20,12 @@ class Airplane
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=AirlineCompany::class, inversedBy="airplanes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $airlineCompany;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
-    private $brand;
+    private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $model;
-
-    /**
-     * @ORM\OneToMany(targetEntity=FlightSeat::class, mappedBy="airplane")
+     * @ORM\OneToMany(targetEntity=FlightSeat::class, mappedBy="flightSeatClass")
      */
     private $flightSeats;
 
@@ -50,38 +39,14 @@ class Airplane
         return $this->id;
     }
 
-    public function getAirlineCompany(): ?AirlineCompany
+    public function getName(): ?string
     {
-        return $this->airlineCompany;
+        return $this->name;
     }
 
-    public function setAirlineCompany(?AirlineCompany $airlineCompany): self
+    public function setName(string $name): self
     {
-        $this->airlineCompany = $airlineCompany;
-
-        return $this;
-    }
-
-    public function getBrand(): ?string
-    {
-        return $this->brand;
-    }
-
-    public function setBrand(string $brand): self
-    {
-        $this->brand = $brand;
-
-        return $this;
-    }
-
-    public function getModel(): ?string
-    {
-        return $this->model;
-    }
-
-    public function setModel(string $model): self
-    {
-        $this->model = $model;
+        $this->name = $name;
 
         return $this;
     }
@@ -98,7 +63,7 @@ class Airplane
     {
         if (!$this->flightSeats->contains($flightSeat)) {
             $this->flightSeats[] = $flightSeat;
-            $flightSeat->setAirplane($this);
+            $flightSeat->setFlightSeatClass($this);
         }
 
         return $this;
@@ -108,11 +73,12 @@ class Airplane
     {
         if ($this->flightSeats->removeElement($flightSeat)) {
             // set the owning side to null (unless already changed)
-            if ($flightSeat->getAirplane() === $this) {
-                $flightSeat->setAirplane(null);
+            if ($flightSeat->getFlightSeatClass() === $this) {
+                $flightSeat->setFlightSeatClass(null);
             }
         }
 
         return $this;
     }
+
 }

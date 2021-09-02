@@ -9,7 +9,7 @@ servers:
 
 paths:
   /airline-company/new:
-    get:
+    post:
       tags:
         - Airline Company
       description: Endpoint to create new airline company
@@ -35,16 +35,95 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    example: true 
+                    example: true
                   message:
                     type: string
-                    example: 'New airlines has been created'
+                    example: "New airlines has been created"
                   data:
                     type: object
-                    example: {
-                      "carrierName": "sample carrier name",
-                      "headquarters": "sample headquarters"
-                    }
-    
-          
-          
+                    example:
+                      {
+                        "carrierName": "sample carrier name",
+                        "headquarters": "sample headquarters",
+                      }
+
+  /airline/{airlineCompanyId}/airplane/new:
+    post:
+      tags:
+        - Airplane
+      description: Endpoint to create new airplane
+      parameters:
+        - in: path
+          name: airlineCompanyId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Airline Company ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                  example: New Carrier
+                model:
+                  type: string
+                  example: New Headquarters
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "New airplane has been created"
+                  data:
+                    type: object
+                    example:
+                      {
+                        "brand": "Fujidenzo",
+                        "model": "H10213",
+                        "airplaneCompany":
+                          { "carrierName": "test", "headQuarters": "test" },
+                      }
+
+  /destination/new:
+    post:
+      tags:
+        - Destination
+      description: Endpoint to create new destination
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: New York
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "New destination has been created"
+                  data:
+                    type: object
+                    example: { "name": "North America" }
