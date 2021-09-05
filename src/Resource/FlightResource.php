@@ -19,19 +19,7 @@ class FlightResource
 
     public function transform(): Response
     {
-        return new JsonResponse([
-            'data'      => [
-                'destination'       =>  [
-                    'name'          =>  $this->flight->getDestination()->getName(),
-                    'id'            =>  $this->flight->getDestination()->getId()
-                ],
-                'terminal'          =>  [
-                    'name'          =>  $this->flight->getTerminal()->getName(),
-                    'id'            =>  $this->flight->getTerminal()->getId()
-                ],
-                'seats'             => $this->getSeatsAvailable()
-            ]
-        ]);
+        return new JsonResponse($this->allocateData());
     }
 
     private function getSeatsAvailable()
@@ -44,8 +32,30 @@ class FlightResource
         return $collect;
     }
 
-    // public static function fromCollection($flightCollection)
-    // {
+    public static function fromCollection($flightCollection): Response
+    {
+        $collection = [];
+        foreach ($flightCollection as $flight) {
+            $flightData = new static($flight);
 
-    // }
+            $collection[] = $flightData->allocateData();
+        }
+
+        return new JsonResponse($collection);
+    }
+
+    private function allocateData()
+    {
+        return [
+            'destination'       =>  [
+                'name'          =>  $this->flight->getDestination()->getName(),
+                'id'            =>  $this->flight->getDestination()->getId()
+            ],
+            'terminal'          =>  [
+                'name'          =>  $this->flight->getTerminal()->getName(),
+                'id'            =>  $this->flight->getTerminal()->getId()
+            ],
+            'seats'             => $this->getSeatsAvailable()
+        ];
+    }
 }

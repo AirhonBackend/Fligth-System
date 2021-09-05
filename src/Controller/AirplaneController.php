@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\AirlineCompany;
 use App\Entity\Airplane;
+use App\Model\AirplaneModel;
 use App\Repository\AirlineCompanyRepository;
+use App\Repository\AirplaneRepository;
+use App\Resource\AirplaneResource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,37 +15,28 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AirplaneController extends AbstractController
 {
+
+    /**
+     * @Route("/airline/{airlineCompanyId}/airplane", name="index_airplane", methods="GET")
+     * @param AirlineCompany $airlineCompanyId
+     */
+
+    public function index(AirplaneRepository $airplaneRepository)
+    {
+        return AirplaneResource::fromCollection($airplaneRepository->findAll());
+    }
+
     /**
      * @Route("/airline/{airlineCompanyId}/airplane/new", name="store_airplane", methods="POST")
      * @param AirlineCompany $airlineCompanyId
      */
+
     public function store(string $airlineCompanyId, AirlineCompanyRepository $airlineCompanyRepository, Request $request)
     {
-        $payload = json_decode($request->getContent());
-        $airlineCompany = $airlineCompanyRepository->find($airlineCompanyId);
+        $payload = AirplaneModel::fromRequest($request->getContent(), $airlineCompanyId);
+        $airplane = $payload->createAirplane($this->getDoctrine()->getManager());
+        $response = new AirplaneResource($airplane);
 
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $airplane = new Airplane();
-
-        $airplane->setBrand($payload->brand)
-            ->setModel($payload->model)
-            ->setAirlineCompany($airlineCompany);
-
-        $entityManager->persist($airplane);
-        $entityManager->flush();
-
-        return $this->json([
-            'success'   =>  true,
-            'message'   =>  'New airplane has been created',
-            'data'      =>  [
-                'brand'   =>  $airplane->getBrand(),
-                'model'   =>  $airplane->getModel(),
-                'airplaneCompany'   =>  [
-                    'carrierName'   =>  $airplane->getAirlineCompany()->getCarrierName(),
-                    'headQuarters'   =>  $airplane->getAirlineCompany()->getHeadQuarters()
-                ],
-            ]
-        ]);
+        return $response->transform();
     }
 }

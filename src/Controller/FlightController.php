@@ -30,10 +30,9 @@ class FlightController extends AbstractController
      * @Route("/flight", name="index_flight", methods="GET")
      */
 
-    public function index(FlightRepository $flightRepository)
+    public function index(FlightRepository $flightRepository): Response
     {
-        $response = new FlightResource($flightRepository->find(15));
-        return $response->transform();
+        return FlightResource::fromCollection($flightRepository->findAll());
     }
 
     /**
