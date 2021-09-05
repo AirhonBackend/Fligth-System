@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\AirlineCompany;
+use App\Model\AirlineCompanyModel;
+use App\Repository\AirlineCompanyRepository;
+use App\Resource\AirlineCompanyResource;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,31 +17,27 @@ class AirlineCompanyController extends AbstractController
 {
 
 
-    
+    /**
+     * @Route("/airline", name="index_airline_company", methods="GET")
+     * @param AirlineCompany $airlineCompanyId
+     */
+    public function index(AirlineCompanyRepository $airlineCompanyRepository)
+    {
+        return AirlineCompanyResource::fromCollection($airlineCompanyRepository->findAll());
+    }
+
     /**
      * @Route("/airline/new", name="airline_company", methods="POST")
      */
 
     public function store(Request $request, ValidatorInterface $validator): Response
     {
-        $payload = json_decode($request->getContent());
-        $entityManager = $this->getDoctrine()->getManager();
+        $payload = AirlineCompanyModel::fromRequest($request->getContent());
 
-        $airlineCompany = new AirlineCompany();
+        $airlineCompany = $payload->createAirlineCompany($this->getDoctrine()->getManager());
 
-        $airlineCompany->setCarrierName($payload->carrierName)
-            ->setHeadquarters($payload->headQuarters);
+        $response = new AirlineCompanyResource($airlineCompany);
 
-        $entityManager->persist($airlineCompany);
-        $entityManager->flush();
-
-        return $this->json([
-            'success'   =>  true,
-            'message'   =>  'New Airline Company',
-            'data'      =>  [
-                'carrierName'   =>  $airlineCompany->getCarrierName(),
-                'headQuarters'   =>  $airlineCompany->getHeadQuarters(),
-            ]
-        ]);
+        return $response->transform();
     }
 }
