@@ -12,7 +12,7 @@ class DestinationResource
 
     public function __construct(Destination $destination)
     {
-        $this->destination;
+        $this->destination = $destination;
     }
 
     public function transform()

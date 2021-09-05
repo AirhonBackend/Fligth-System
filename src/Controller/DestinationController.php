@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class DestinationController extends AbstractController
 {
     /**
-     * @Route("/destination", name="index_destination")
+     * @Route("/destination", name="index_destination", methods="GET")
      */
     public function index(DestinationRepository $destinationRepository)
     {

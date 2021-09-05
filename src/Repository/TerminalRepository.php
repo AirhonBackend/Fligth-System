@@ -19,6 +19,18 @@ class TerminalRepository extends ServiceEntityRepository
         parent::__construct($registry, Terminal::class);
     }
 
+
+    public function findByDestinationId($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.destination = :val')
+            ->setParameter('val', $value)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Terminal[] Returns an array of Terminal objects
     //  */

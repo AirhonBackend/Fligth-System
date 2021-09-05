@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Passenger;
+use App\Model\PassengerModel;
+use App\Repository\PassengerRepository;
+use App\Resource\PassengerResource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,33 +14,23 @@ use Symfony\Component\HttpFoundation\Request;
 class PasssengerController extends AbstractController
 {
     /**
+     * @Route("/passsenger", name="index_passenger")
+     */
+    public function index(PassengerRepository $passengerRepository): Response
+    {
+        return PassengerResource::fromCollection($passengerRepository->findAll());
+    }
+    /**
      * @Route("/passsenger/new", name="store_passenger")
      */
     public function store(Request $request): Response
     {
-        $payload = json_decode($request->getContent());
-        $entityManager = $this->getDoctrine()->getManager();
+        $payload = PassengerModel::fromRequest($request->getContent());
 
-        $passenger = new Passenger();
+        $passenger = $payload->createPassenger($this->getDoctrine()->getManager());
 
-        $passenger->setFirstName($payload->firstName)
-            ->setMiddleName($payload->middleName ?? null)
-            ->setLastName($payload->lastName)
-            ->setAge($payload->age)
-            ->setGender($payload->gender);
+        $response = new PassengerResource($passenger);
 
-        $entityManager->persist($passenger);
-        $entityManager->flush();
-
-        return $this->json([
-            'success'   =>  true,
-            'message'   =>  'New Passenger',
-            'data'      =>  [
-                'firstName'     =>  $passenger->getFirstName(),
-                'lastName'      =>  $passenger->getLastName(),
-                'age'           =>  $passenger->getAge(),
-                'gender'        =>  $passenger->getGender(),
-            ]
-        ]);
+        return $response->transform();
     }
 }
