@@ -23,7 +23,7 @@ class FlightSeatResource
                 'name'      =>  $this->flightSeat->getFlight()->getDestination()->getName(),
                 'id'        =>  $this->flightSeat->getFlight()->getDestination()->getId(),
             ],
-            $this->getSeatsForFlight()
+            'seat' => $this->getSeatsForFlight()
         ]);
     }
 

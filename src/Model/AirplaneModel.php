@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Entity\AirlineCompany;
 use App\Entity\Airplane;
 use App\Repository\AirlineCompanyRepository;
+use App\Repository\AirplaneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AirplaneModel
@@ -17,11 +18,14 @@ class AirplaneModel
 
     public $airplane;
 
-    public function __construct(int $airlineCompanyId, string $brand, string $model)
+    public $airplaneId;
+
+    public function __construct(string $airlineCompanyId = null, string $brand = null, string $model = null, string $airplaneId = null)
     {
         $this->airlineCompanyId = $airlineCompanyId;
         $this->brand = $brand;
         $this->model = $model;
+        $this->airplaneId = $airplaneId;
     }
 
     public function getAirlineCompany(AirlineCompanyRepository $airlineCompanyRepository)
@@ -40,6 +44,18 @@ class AirplaneModel
         );
     }
 
+    public static function fromRequestUpdate($request, $airlineCompanyId, $airplaneId)
+    {
+        $request = json_decode($request);
+
+        return new static(
+            $airlineCompanyId,
+            $request->brand ?? null,
+            $request->model ?? null,
+            $airplaneId
+        );
+    }
+
     public function createAirplane(EntityManagerInterface $entityManagerInterface)
     {
         $this->airplane = new Airplane();
@@ -54,5 +70,10 @@ class AirplaneModel
         $entityManagerInterface->flush();
 
         return $this->airplane;
+    }
+
+    public function getAirplane(AirplaneRepository $airplaneRepository)
+    {
+        return $airplaneRepository->find($this->airplaneId);
     }
 }

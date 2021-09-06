@@ -21,7 +21,7 @@ class AirplaneController extends AbstractController
      * @param AirlineCompany $airlineCompanyId
      */
 
-    public function index(AirplaneRepository $airplaneRepository)
+    public function index(AirplaneRepository $airplaneRepository): Response
     {
         return AirplaneResource::fromCollection($airplaneRepository->findAll());
     }
@@ -31,11 +31,27 @@ class AirplaneController extends AbstractController
      * @param AirlineCompany $airlineCompanyId
      */
 
-    public function store(string $airlineCompanyId, AirlineCompanyRepository $airlineCompanyRepository, Request $request)
+    public function store(string $airlineCompanyId, AirlineCompanyRepository $airlineCompanyRepository, Request $request): Response
     {
         $payload = AirplaneModel::fromRequest($request->getContent(), $airlineCompanyId);
         $airplane = $payload->createAirplane($this->getDoctrine()->getManager());
         $response = new AirplaneResource($airplane);
+
+        return $response->transform();
+    }
+
+    /**
+     * @Route("/airline/{airlineCompanyId}/airplane/{airplaneId}", name="show_airplane", methods="POST")
+     * @param AirlineCompany $airlineCompanyId
+     * @param Airplane $airplaneId
+     */
+
+    public function show(string $airlineCompanyId, string $airplaneId, Request $request)
+    {
+        $airplane = AirplaneModel::fromRequestUpdate($request, $airlineCompanyId, $airplaneId);
+
+        $response = new AirplaneResource($airplane->getAirplane($this->getDoctrine()
+            ->getManager()->getRepository(Airplane::class)));
 
         return $response->transform();
     }

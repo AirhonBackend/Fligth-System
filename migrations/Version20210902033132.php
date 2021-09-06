@@ -20,10 +20,7 @@ final class Version20210902033132 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE flight_seat_airplane');
-        $this->addSql('DROP TABLE flight_seat_flight');
-        $this->addSql('DROP TABLE flight_seat_flight_seat_classes');
-        $this->addSql('DROP TABLE flight_seat_passenger');
+        $this->addSql('CREATE TABLE flight_seat (id INT AUTO_INCREMENT NOT NULL, number VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE flight_seat ADD flight_id INT DEFAULT NULL, ADD passenger_id INT DEFAULT NULL, ADD flight_seat_class_id INT DEFAULT NULL, ADD airplane_id INT NOT NULL, ADD status VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE flight_seat ADD CONSTRAINT FK_BC626B0191F478C5 FOREIGN KEY (flight_id) REFERENCES flight (id)');
         $this->addSql('ALTER TABLE flight_seat ADD CONSTRAINT FK_BC626B014502E565 FOREIGN KEY (passenger_id) REFERENCES passenger (id)');

@@ -19,7 +19,6 @@ class AirlineCompanyController extends AbstractController
 
     /**
      * @Route("/airline", name="index_airline_company", methods="GET")
-     * @param AirlineCompany $airlineCompanyId
      */
     public function index(AirlineCompanyRepository $airlineCompanyRepository)
     {
@@ -27,7 +26,7 @@ class AirlineCompanyController extends AbstractController
     }
 
     /**
-     * @Route("/airline/new", name="airline_company", methods="POST")
+     * @Route("/airline/new", name="store_airline_company", methods="POST")
      */
 
     public function store(Request $request, ValidatorInterface $validator): Response
@@ -37,6 +36,23 @@ class AirlineCompanyController extends AbstractController
         $airlineCompany = $payload->createAirlineCompany($this->getDoctrine()->getManager());
 
         $response = new AirlineCompanyResource($airlineCompany);
+
+        return $response->transform();
+    }
+
+    /**
+     * @Route("/airline/{airlineCompanyId}", name="show_irline_company", methods="GET")
+     * @param AirlineCompany $airlineCompanyId
+     */
+
+    public function show(string $airlineCompanyId, Request $request)
+    {
+        $airlineCompany = AirlineCompanyModel::fromRequestUpdate($request->getContent(), $airlineCompanyId);
+
+        $response = new AirlineCompanyResource($airlineCompany
+            ->getAirlineCompany($this->getDoctrine()
+                ->getManager()
+                ->getRepository(AirlineCompany::class)));
 
         return $response->transform();
     }

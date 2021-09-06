@@ -35,6 +35,22 @@ services:
       - "3308:3306"
     networks:
       - app_network
+      
+  db_test:
+    build: ./docker/mysql/
+    image: ${APP_NAME}-mysql
+    volumes:
+      - db_data_test:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}_test
+    ports:
+      - "3306:3306"
+    networks:
+      - app_network
 
   webserver:
     build: ./docker/nginx/
@@ -53,6 +69,7 @@ services:
 
 volumes:
   db_data: {}
+  db_data_test: {}
 networks:
   app_network:
     driver: bridge
