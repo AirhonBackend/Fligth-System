@@ -13,6 +13,7 @@ use App\Repository\TerminalRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\DestinationRepository;
 use App\Model\FlightSeatModel;
+use Exception;
 
 class FlightModel
 {
@@ -73,9 +74,26 @@ class FlightModel
         $terminalRepository = $entityManagerInterface->getRepository(Terminal::class);
         $airplaneRepository = $entityManagerInterface->getRepository(Airplane::class);
 
+        $destination = $this->getDestination($destinationRepository);
+        $terminal = $this->getTerminal($terminalRepository);
+        $terminal = $this->getTerminal($terminalRepository);
+
+        if (!$terminal) {
+            throw new Exception('Terminal not found');
+        }
+
+        if (!$destination) {
+            throw new Exception('Destination not found');
+        }
+
         $airplane = $this->getAirplane($airplaneRepository);
-        $this->flight->setDestination($this->getDestination($destinationRepository))
-            ->setTerminal($this->getTerminal($terminalRepository))
+
+        if (!$airplane) {
+            throw new Exception('Airplane not found');
+        }
+
+        $this->flight->setDestination($destination)
+            ->setTerminal($terminal)
             ->setCapacity($this->capacity);
 
         $entityManagerInterface->persist($this->flight);

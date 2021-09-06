@@ -12,6 +12,7 @@ use App\Repository\FlightSeatClassesRepository;
 use App\Repository\FlightSeatRepository;
 use App\Repository\PassengerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class FlightSeatModel
 {
@@ -81,7 +82,18 @@ class FlightSeatModel
 
     public function bookFlight(EntityManagerInterface $entityManagerInterface): FlightSeat
     {
-        $this->flightSeat->setPassenger($this->getPassenger($entityManagerInterface->getRepository(Passenger::class)))
+        $passenger = $this->getPassenger($entityManagerInterface->getRepository(Passenger::class));
+        $flightSeatClass = $this->getFlightSeatClass($entityManagerInterface->getRepository(FlightSeatClasses::class));
+
+        if (!$passenger) {
+            throw new Exception('Passenger not found');
+        }
+
+        if (!$flightSeatClass) {
+            throw new Exception('Seat Class not found');
+        }
+
+        $this->flightSeat->setPassenger($passenger)
             ->setFlightSeatClass($this->getFlightSeatClass($entityManagerInterface->getRepository(FlightSeatClasses::class)))
             ->setStatus($this->status);
 

@@ -6,6 +6,7 @@ use App\Entity\Destination;
 use App\Entity\Terminal;
 use App\Repository\DestinationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class TerminalModel
 {
@@ -42,8 +43,14 @@ class TerminalModel
 
         $destinationRepository = $entityManagerInterface->getRepository(Destination::class);
 
+        $destination = $this->getDestination($destinationRepository);
+
+        if (!$destination) {
+            throw new Exception('Destination not found');
+        }
+
         $this->terminal->setName($this->name)
-            ->setDestination($this->getDestination($destinationRepository));
+            ->setDestination($destination);
 
         $entityManagerInterface->persist($this->terminal);
 

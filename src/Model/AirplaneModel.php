@@ -7,6 +7,7 @@ use App\Entity\Airplane;
 use App\Repository\AirlineCompanyRepository;
 use App\Repository\AirplaneRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class AirplaneModel
 {
@@ -62,9 +63,15 @@ class AirplaneModel
 
         $airlineCompanyRepository = $entityManagerInterface->getRepository(AirlineCompany::class);
 
+        $airlineCompany = $this->getAirlineCompany($airlineCompanyRepository);
+
+        if (!$airlineCompany) {
+            throw new Exception('Airline Company not found');
+        }
+
         $this->airplane->setBrand($this->brand)
             ->setModel($this->model)
-            ->setAirlineCompany($this->getAirlineCompany($airlineCompanyRepository));
+            ->setAirlineCompany($airlineCompany);
 
         $entityManagerInterface->persist($this->airplane);
         $entityManagerInterface->flush();
