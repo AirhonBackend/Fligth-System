@@ -11,7 +11,7 @@ use Exception;
 
 class AirplaneModel
 {
-    public $airlineCompanyId;
+    public AirlineCompany $airlineCompany;
 
     public $brand;
 
@@ -21,9 +21,9 @@ class AirplaneModel
 
     public $airplaneId;
 
-    public function __construct(string $airlineCompanyId = null, string $brand = null, string $model = null, string $airplaneId = null)
+    public function __construct(AirlineCompany $airlineCompany = null, string $brand = null, string $model = null, string $airplaneId = null)
     {
-        $this->airlineCompanyId = $airlineCompanyId;
+        $this->airlineCompany = $airlineCompany;
         $this->brand = $brand;
         $this->model = $model;
         $this->airplaneId = $airplaneId;
@@ -34,12 +34,12 @@ class AirplaneModel
         return $airlineCompanyRepository->find($this->airlineCompanyId);
     }
 
-    public static function fromRequest($request, $airlineCompanyId)
+    public static function fromRequest($request, AirlineCompany $airlineCompany)
     {
         $request = json_decode($request);
 
         return new static(
-            $airlineCompanyId,
+            $airlineCompany,
             $request->brand,
             $request->model,
         );
@@ -55,28 +55,6 @@ class AirplaneModel
             $request->model ?? null,
             $airplaneId
         );
-    }
-
-    public function createAirplane(EntityManagerInterface $entityManagerInterface)
-    {
-        $this->airplane = new Airplane();
-
-        $airlineCompanyRepository = $entityManagerInterface->getRepository(AirlineCompany::class);
-
-        $airlineCompany = $this->getAirlineCompany($airlineCompanyRepository);
-
-        if (!$airlineCompany) {
-            throw new Exception('Airline Company not found');
-        }
-
-        $this->airplane->setBrand($this->brand)
-            ->setModel($this->model)
-            ->setAirlineCompany($airlineCompany);
-
-        $entityManagerInterface->persist($this->airplane);
-        $entityManagerInterface->flush();
-
-        return $this->airplane;
     }
 
     public function getAirplane(AirplaneRepository $airplaneRepository)

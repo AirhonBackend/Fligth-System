@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Airplane;
+use App\Model\AirplaneModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,9 +16,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AirplaneRepository extends ServiceEntityRepository
 {
+    // protected $manager;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Airplane::class);
+
+        // $this->manager = $entityManagerInterface;
     }
 
     // /**
@@ -47,4 +53,18 @@ class AirplaneRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(AirplaneModel $airplaneDto)
+    {
+        $airplane = new Airplane();
+
+        $airplane->setBrand($airplaneDto->brand)
+            ->setModel($airplaneDto->model)
+            ->setAirlineCompany($airplaneDto->airlineCompany);
+
+        $this->getEntityManager()->persist($airplane);
+        $this->getEntityManager()->flush();
+
+        return $airplane;
+    }
 }

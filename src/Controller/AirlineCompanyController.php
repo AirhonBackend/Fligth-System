@@ -26,7 +26,7 @@ class AirlineCompanyController extends AbstractController
     }
 
     /**
-     * @Route("/airline/new", name="store_airline_company", methods="POST")
+     * @Route("/airlines", name="store_airline_company", methods="POST")
      */
 
     public function store(Request $request, ValidatorInterface $validator): Response
@@ -41,7 +41,7 @@ class AirlineCompanyController extends AbstractController
     }
 
     /**
-     * @Route("/airline/{id}", name="show_irline_company", methods="GET")
+     * @Route("/airlines/{id}", name="show_irline_company", methods="GET")
      */
 
     public function show(AirlineCompany $airlineCompany)

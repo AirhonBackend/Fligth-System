@@ -17,7 +17,7 @@ class AirplaneController extends AbstractController
 {
 
     /**
-     * @Route("/airline/{airlineCompanyId}/airplane", name="index_airplane", methods="GET")
+     * @Route("/airlines/{airlineCompanyId}/airplanes", name="index_airplane", methods="GET")
      * @param AirlineCompany $airlineCompanyId
      */
 
@@ -27,21 +27,18 @@ class AirplaneController extends AbstractController
     }
 
     /**
-     * @Route("/airline/{airlineCompanyId}/airplane/new", name="store_airplane", methods="POST")
-     * @param AirlineCompany $airlineCompanyId
+     * @Route("/airlines/{id}/airplanes", name="store_airplane", methods="POST")
      */
 
-    public function store(string $airlineCompanyId, AirlineCompanyRepository $airlineCompanyRepository, Request $request): Response
+    public function store(AirlineCompany $airlineCompany, AirplaneRepository $airplaneRepository, Request $request): Response
     {
-        $payload = AirplaneModel::fromRequest($request->getContent(), $airlineCompanyId);
-        $airplane = $payload->createAirplane($this->getDoctrine()->getManager());
-        $response = new AirplaneResource($airplane);
-
+        $airplaneDto = AirplaneModel::fromRequest($request->getContent(), $airlineCompany);
+        $response = new AirplaneResource($airplaneRepository->save($airplaneDto));
         return $response->toJson();
     }
 
     /**
-     * @Route("/airline/{airlineCompanyId}/airplane/{airplaneId}", name="show_airplane", methods="POST")
+     * @Route("/airlines/{airlineCompanyId}/airplanes/{airplaneId}", name="show_airplane", methods="POST")
      */
 
     public function show(string $airlineCompanyId, string $airplaneId, Request $request)
