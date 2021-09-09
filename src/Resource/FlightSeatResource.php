@@ -6,47 +6,56 @@ use App\Entity\FlightSeat;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class FlightSeatResource
+class FlightSeatResource extends BaseResourceDTO
 {
 
-    public $flightSeat;
+    public FlightResource $flight;
+
+    public PassengerResource $passenger;
+
+    public AirplaneResource $airplane;
+
+    public string $status;
+
+    public string $seatNumber;
+
+    public FlightSeatClassesResource $seatClass;
 
     public function __construct(FlightSeat $flightSeat)
     {
-        $this->flightSeat = $flightSeat;
+        $this->flight = new FlightResource($flightSeat->getFlight());
+        $this->passenger = new PassengerResource($flightSeat->getPassenger());
+        $this->airplane = new AirplaneResource($flightSeat->getAirplane());
+        $this->status = $flightSeat->getStatus();
+        $this->seatNumber = $flightSeat->getNumber();
+        $this->seatClass = new FlightSeatClassesResource($flightSeat->getFlightSeatClass());
+
+        $this->data = $this->allocateData();
     }
 
-    public function transform(): Response
-    {
-        return new JsonResponse([
-            'destination'   =>  [
-                'name'      =>  $this->flightSeat->getFlight()->getDestination()->getName(),
-                'id'        =>  $this->flightSeat->getFlight()->getDestination()->getId(),
-            ],
-            'seat' => $this->getSeatsForFlight()
-        ]);
-    }
-
-    public function getSeatsForFlight()
+    private function allocateData()
     {
         return [
+            'destination'   =>  [
+                'id'    =>  $this->flight->destination->id,
+                'name'  =>  $this->flight->destination->name,
+            ],
             'passenger' =>  [
-                'firstName'     =>  $this->flightSeat->getPassenger() !== null ? $this->flightSeat->getPassenger()->getFirstName() : null,
-                'lastName'      =>  $this->flightSeat->getPassenger() !== null ? $this->flightSeat->getPassenger()->getLastName() : null,
-                'age'           =>  $this->flightSeat->getPassenger() !== null ? $this->flightSeat->getPassenger()->getAge() : null,
-                'gender'        =>  $this->flightSeat->getPassenger() !== null ? $this->flightSeat->getPassenger()->getGender() : null,
-                'id'            =>  $this->flightSeat->getPassenger() !== null ?  $this->flightSeat->getPassenger()->getId() : null,
+                'firstName' =>  $this->passenger->firstName,
+                'lastName'  =>  $this->passenger->lastName,
+                'age'       =>  $this->passenger->age,
+                'gender'    =>  $this->passenger->gender,
+                'id'        =>  $this->passenger->id
             ],
             'seatClass' =>  [
-                'name'  =>  $this->flightSeat->getFlightSeatClass() !== null ? $this->flightSeat->getFlightSeatClass()->getName() : null,
-                'id'    =>  $this->flightSeat->getFlightSeatClass() !== null ? $this->flightSeat->getFlightSeatClass()->getId() : null,
+                'name'      =>  $this->seatClass->name,
+                'id'        =>  $this->seatClass->id
             ],
-            'airplane' =>  [
-                'model'  =>  $this->flightSeat->getAirplane()->getModel(),
-                'brand'  =>  $this->flightSeat->getAirplane()->getBrand(),
-            ],
-            'status'    =>  $this->flightSeat->getStatus(),
-            'seatNumber' => $this->flightSeat->getNumber()
+            'airplane'  =>  [
+                'id'    =>  $this->airplane->id,
+                'model' =>  $this->airplane->model,
+                'brand' =>  $this->airplane->brand
+            ]
         ];
     }
 }

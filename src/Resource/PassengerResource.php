@@ -6,39 +6,37 @@ use App\Entity\Passenger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class PassengerResource
+class PassengerResource extends BaseResourceDTO
 {
-    public $passenger;
+
+    public int $id;
+    public string $firstName;
+
+    public string $lastName;
+
+    public int $age;
+
+    public string $gender;
 
     public function __construct(Passenger $passenger)
     {
-        $this->passenger = $passenger;
+        $this->id = $passenger->getId();
+        $this->firstName = $passenger->getFirstName();
+        $this->lastName = $passenger->getLastName();
+        $this->age = $passenger->getAge();
+        $this->gender = $passenger->getGender();
+
+        $this->data = $this->allocateData();
     }
 
-    public function transform()
-    {
-        return new JsonResponse($this->allocateData());
-    }
 
-    public static function fromCollection($passengerCollection): Response
-    {
-        $collection = [];
-        foreach ($passengerCollection as $passenger) {
-            $passengerData = new static($passenger);
-
-            $collection[] = $passengerData->allocateData();
-        }
-
-        return new JsonResponse($collection);
-    }
-
-    public function allocateData()
+    private function allocateData()
     {
         return [
-            'firstName'     =>  $this->passenger->getFirstName(),
-            'lastName'      =>  $this->passenger->getLastName(),
-            'age'           =>  $this->passenger->getAge(),
-            'gender'        =>  $this->passenger->getGender(),
+            'firstName'     =>  $this->firstName,
+            'lastName'      =>  $this->lastName,
+            'age'           =>  $this->age,
+            'gender'        =>  $this->gender,
         ];
     }
 }

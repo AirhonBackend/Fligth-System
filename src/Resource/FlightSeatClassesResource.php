@@ -6,36 +6,26 @@ use App\Entity\FlightSeatClasses;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class FlightSeatClassesResource
+class FlightSeatClassesResource extends BaseResourceDTO
 {
-    public $flightSeatClasses;
+    public int $id;
+
+    public string $name;
 
     public function __construct(FlightSeatClasses $flightSeatClasses)
     {
-        $this->flightSeatClasses =  $flightSeatClasses;
+        $this->id =  $flightSeatClasses->getId();
+
+        $this->name = $flightSeatClasses->getName();
+
+        $this->data = $this->allocateData();
     }
 
-    public function transform()
-    {
-        return new JsonResponse($this->allocateData());
-    }
-
-    public static function fromCollection($flightSeatClassesCollection): Response
-    {
-        $collection = [];
-        foreach ($flightSeatClassesCollection as $flightSeatClasses) {
-            $flightSeatClassesData = new static($flightSeatClasses);
-
-            $collection[] = $flightSeatClassesData->allocateData();
-        }
-
-        return new JsonResponse($collection);
-    }
-
-    public function allocateData()
+    private function allocateData()
     {
         return [
-            'name'   =>  $this->flightSeatClasses->getName(),
+            'id'    =>  $this->id,
+            'name'  =>  $this->name,
         ];
     }
 }

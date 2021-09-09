@@ -16,11 +16,13 @@ use App\Model\FlightModel;
 use App\Model\FlightSeatModel;
 use App\Resource\FlightResource;
 use App\Resource\FlightSeatResource;
+use Exception;
 use GeneralApiResource;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FlightController extends AbstractController
@@ -38,13 +40,14 @@ class FlightController extends AbstractController
     /**
      * @Route("/flight/new", name="store_flight", methods="POST")
      */
+
     public function store(Request $request): Response
     {
         $payload = FlightModel::fromRequest($request->getContent());
         $flight = $payload->createFlight($this->getDoctrine()->getManager());
         $response = new FlightResource($flight);
 
-        return $response->transform();
+        return $response->toJson();
     }
 
     /**
@@ -53,9 +56,19 @@ class FlightController extends AbstractController
      */
     public function bookPassenger(string $flightSeatId, Request $request, FlightSeatRepository $flightSeatRepository): Response
     {
-        $flightSeat = FlightSeatModel::fromRequest($request->getContent(), $flightSeatRepository->find($flightSeatId));
+        $flightSeat = $flightSeatRepository->find($flightSeatId);
+
+        if ($flightSeat && $flightSeat->getStatus() === 'occupied') {
+            throw new Exception('Flight already booked');
+        }
+
+        if (!$flightSeat) {
+            throw new NotFoundHttpException('No Flights available');
+        }
+
+        $flightSeat = FlightSeatModel::fromRequest($request->getContent(), $flightSeat);
         $flightSeat = $flightSeat->bookFlight($this->getDoctrine()->getManager());
         $response = new FlightSeatResource($flightSeat);
-        return $response->transform();
+        return $response->toJson();
     }
 }

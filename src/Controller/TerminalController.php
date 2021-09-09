@@ -36,6 +36,6 @@ class TerminalController extends AbstractController
 
         $response = new TerminalResource($terminal);
 
-        return $response->transform();
+        return $response->toJson();
     }
 }

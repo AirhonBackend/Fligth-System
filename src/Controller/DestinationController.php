@@ -31,6 +31,6 @@ class DestinationController extends AbstractController
 
         $response = new DestinationResource($destination);
 
-        return $response->transform();
+        return $response->toJson();
     }
 }

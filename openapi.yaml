@@ -140,14 +140,12 @@ paths:
                   data:
                     type: object
                     example:
-                      {
                        { 
                           "brand": "Fujidenzo",
                           "model": "H10213",
                           "airplaneCompany":
                             { "carrierName": "test", "headQuarters": "test" },
-                        },
-                      }
+                        }
 
   /destination/new:
     post:

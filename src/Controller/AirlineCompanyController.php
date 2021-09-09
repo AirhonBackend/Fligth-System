@@ -6,8 +6,8 @@ use App\Entity\AirlineCompany;
 use App\Model\AirlineCompanyModel;
 use App\Repository\AirlineCompanyRepository;
 use App\Resource\AirlineCompanyResource;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +18,7 @@ class AirlineCompanyController extends AbstractController
 
 
     /**
-     * @Route("/airline", name="index_airline_company", methods="GET")
+     * @Route("/airlines", name="index_airline_company", methods="GET")
      */
     public function index(AirlineCompanyRepository $airlineCompanyRepository)
     {
@@ -37,23 +37,16 @@ class AirlineCompanyController extends AbstractController
 
         $response = new AirlineCompanyResource($airlineCompany);
 
-        return $response->transform();
+        return $response->toJson();
     }
 
     /**
-     * @Route("/airline/{airlineCompanyId}", name="show_irline_company", methods="GET")
-     * @param AirlineCompany $airlineCompanyId
+     * @Route("/airline/{id}", name="show_irline_company", methods="GET")
      */
 
-    public function show(string $airlineCompanyId, Request $request)
+    public function show(AirlineCompany $airlineCompany)
     {
-        $airlineCompany = AirlineCompanyModel::fromRequestUpdate($request->getContent(), $airlineCompanyId);
-
-        $response = new AirlineCompanyResource($airlineCompany
-            ->getAirlineCompany($this->getDoctrine()
-                ->getManager()
-                ->getRepository(AirlineCompany::class)));
-
-        return $response->transform();
+        $response = new AirlineCompanyResource($airlineCompany);
+        return $response->toJson();
     }
 }

@@ -3,42 +3,32 @@
 namespace App\Resource;
 
 use App\Entity\Terminal;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
-class TerminalResource
+class TerminalResource extends BaseResourceDTO
 {
-    public $terminal;
+    public DestinationResource $destination;
+
+    public string $name;
+
+    public int $id;
 
     public function __construct(Terminal $terminal)
     {
-        $this->terminal = $terminal;
-    }
+        $this->destination = $terminal->getDestination();
+        $this->name = $terminal->getName();
+        $this->id = $terminal->getId();
 
-    public function transform()
-    {
-        return new JsonResponse($this->allocateData());
-    }
-
-    public static function fromCollection($terminalCollection): Response
-    {
-        $collection = [];
-        foreach ($terminalCollection as $terminal) {
-            $terminalData = new static($terminal);
-
-            $collection[] = $terminalData->allocateData();
-        }
-
-        return new JsonResponse($collection);
+        $this->data = $this->allocateData();
     }
 
     public function allocateData()
     {
         return [
-            'name'   =>  $this->terminal->getName(),
+            'id'   =>  $this->terminal->id,
+            'name'   =>  $this->terminal->name,
             'destination'   =>  [
-                'name'   =>  $this->terminal->getDestination()->getName(),
-                'id'   =>  $this->terminal->getDestination()->getId(),
+                'name'   =>  $this->destination->name,
+                'id'   =>  $this->destination->id,
             ],
         ];
     }

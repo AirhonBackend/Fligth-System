@@ -34,6 +34,6 @@ class FlightSeatClassesController extends AbstractController
 
         $response = new FlightSeatClassesResource($flightSeatClass);
 
-        return $response->transform();
+        return $response->toJson();
     }
 }

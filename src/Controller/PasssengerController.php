@@ -31,6 +31,6 @@ class PasssengerController extends AbstractController
 
         $response = new PassengerResource($passenger);
 
-        return $response->transform();
+        return $response->toJson();
     }
 }

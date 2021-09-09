@@ -3,23 +3,40 @@
 namespace App\Resource;
 
 use App\Entity\Flight;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
-class FlightResource
+class FlightResource extends BaseResourceDTO
 {
-    public $flight;
+    public DestinationResource $destination;
 
-    public $destination;
+    public TerminalResource $terminal;
+
+    public int $capacity;
+
+    public int $id;
 
     public function __construct(Flight $flight)
     {
-        $this->flight = $flight;
+        $this->destination = new DestinationResource($flight->getDestination());
+        $this->capacity = $flight->getCapacity();
+        $this->id = $flight->getId();
+        $this->terminal = new TerminalResource($flight->getTerminal());
+
+        $this->data = $this->allocateData();
     }
 
-    public function transform(): Response
+    private function allocateData()
     {
-        return new JsonResponse($this->allocateData());
+        return $this->data = [
+            'destination'       =>  [
+                'name'          =>  $this->destination->name,
+                'id'            =>  $this->destination->id
+            ],
+            'terminal'          =>  [
+                'name'          =>  $this->terminal->name,
+                'id'            =>  $this->terminal->id
+            ],
+            'seats'             => $this->getSeatsAvailable()
+        ];
     }
 
     private function getSeatsAvailable()
@@ -27,35 +44,8 @@ class FlightResource
         $collect = [];
         foreach ($this->flight->getFlightSeats()->getValues() as $seat) {
             $flightSeat = new FlightSeatResource($seat);
-            $collect[] = $flightSeat->getSeatsForFlight();
+            $collect[] = $flightSeat->data;
         }
         return $collect;
-    }
-
-    public static function fromCollection($flightCollection): Response
-    {
-        $collection = [];
-        foreach ($flightCollection as $flight) {
-            $flightData = new static($flight);
-
-            $collection[] = $flightData->allocateData();
-        }
-
-        return new JsonResponse($collection);
-    }
-
-    private function allocateData()
-    {
-        return [
-            'destination'       =>  [
-                'name'          =>  $this->flight->getDestination()->getName(),
-                'id'            =>  $this->flight->getDestination()->getId()
-            ],
-            'terminal'          =>  [
-                'name'          =>  $this->flight->getTerminal()->getName(),
-                'id'            =>  $this->flight->getTerminal()->getId()
-            ],
-            'seats'             => $this->getSeatsAvailable()
-        ];
     }
 }

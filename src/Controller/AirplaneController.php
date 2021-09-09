@@ -37,13 +37,11 @@ class AirplaneController extends AbstractController
         $airplane = $payload->createAirplane($this->getDoctrine()->getManager());
         $response = new AirplaneResource($airplane);
 
-        return $response->transform();
+        return $response->toJson();
     }
 
     /**
      * @Route("/airline/{airlineCompanyId}/airplane/{airplaneId}", name="show_airplane", methods="POST")
-     * @param AirlineCompany $airlineCompanyId
-     * @param Airplane $airplaneId
      */
 
     public function show(string $airlineCompanyId, string $airplaneId, Request $request)
@@ -53,6 +51,6 @@ class AirplaneController extends AbstractController
         $response = new AirplaneResource($airplane->getAirplane($this->getDoctrine()
             ->getManager()->getRepository(Airplane::class)));
 
-        return $response->transform();
+        return $response->toJson();
     }
 }

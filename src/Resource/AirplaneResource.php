@@ -6,41 +6,33 @@ use App\Entity\Airplane;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class AirplaneResource
+class AirplaneResource extends BaseResourceDTO
 {
-    public $airplane;
+    public int $id;
+
+    public string $brand;
+
+    public string $model;
+
+    public AirlineCompanyResource $airplaneCompany;
 
     public function __construct(Airplane $airplane)
     {
-        $this->airplane = $airplane;
+        $this->id = $airplane->getId();
+        $this->brand = $airplane->getBrand();
+        $this->model = $airplane->getModel();
+        $this->airplaneCompany = new AirlineCompanyResource($airplane->getAirlineCompany());
+
+        $this->data = $this->allocateData();
     }
 
-    public function transform()
-    {
-        return new JsonResponse($this->allocateData());
-    }
-
-    public static function fromCollection($airplaneCollection): Response
-    {
-        $collection = [];
-        foreach ($airplaneCollection as $airplane) {
-            $airplaneData = new static($airplane);
-
-            $collection[] = $airplaneData->allocateData();
-        }
-
-        return new JsonResponse($collection);
-    }
-
-    public function allocateData()
+    private function allocateData()
     {
         return [
-            'brand'   =>  $this->airplane->getBrand(),
-            'model'   =>  $this->airplane->getModel(),
-            'airplaneCompany'   =>  [
-                'carrierName'   =>  $this->airplane->getAirlineCompany()->getCarrierName(),
-                'headQuarters'   =>  $this->airplane->getAirlineCompany()->getHeadQuarters()
-            ],
+            'id'                =>  $this->id,
+            'brand'             =>  $this->brand,
+            'model'             =>  $this->model,
+            'airplaneCompany'   =>  $this->airplaneCompany->data
         ];
     }
 }

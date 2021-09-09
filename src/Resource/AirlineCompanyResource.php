@@ -3,40 +3,22 @@
 namespace App\Resource;
 
 use App\Entity\AirlineCompany;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
-class AirlineCompanyResource
+
+class AirlineCompanyResource extends BaseResourceDTO
 {
-    public $airlineCompany;
+    public string $carrierName;
+
+    public string $headQuarters;
 
     public function __construct(AirlineCompany $airlineCompany)
     {
-        $this->airlineCompany = $airlineCompany;
-    }
+        $this->carrierName = $airlineCompany->getCarrierName();
+        $this->headQuarters = $airlineCompany->getHeadquarters();
 
-    public function transform()
-    {
-        return new JsonResponse($this->allocateData());
-    }
-
-    public static function fromCollection($airlineCompanyCollection): Response
-    {
-        $collection = [];
-        foreach ($airlineCompanyCollection as $airlineCompany) {
-            $airlineCompanyData = new static($airlineCompany);
-
-            $collection[] = $airlineCompanyData->allocateData();
-        }
-
-        return new JsonResponse($collection);
-    }
-
-    public function allocateData()
-    {
-        return [
-            'carrierName'   =>  $this->airlineCompany->getCarrierName(),
-            'headQuarters'   =>  $this->airlineCompany->getHeadQuarters(),
+        $this->data = [
+            'carrierName'   =>  $this->carrierName,
+            'headQuarters'   =>  $this->headQuarters
         ];
     }
 }
