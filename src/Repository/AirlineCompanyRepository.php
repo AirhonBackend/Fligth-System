@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AirlineCompany;
+use App\Model\AirlineCompanyModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,17 @@ class AirlineCompanyRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(AirlineCompanyModel $airlineCompanyModel)
+    {
+        $airlineCompany = new AirlineCompany();
+
+        $airlineCompany->setCarrierName($airlineCompanyModel->carrierName)
+            ->setHeadquarters($airlineCompanyModel->headQuarters);
+
+        $this->getEntityManager()->persist($airlineCompany);
+        $this->getEntityManager()->flush();
+
+        return $airlineCompany;
+    }
 }

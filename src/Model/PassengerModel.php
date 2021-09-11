@@ -41,19 +41,19 @@ class PassengerModel
         );
     }
 
-    public function createPassenger(EntityManagerInterface $entityManagerInterface)
-    {
-        $this->passenger = new Passenger();
+    // public function createPassenger(EntityManagerInterface $entityManagerInterface)
+    // {
+    //     $this->passenger = new Passenger();
 
-        $this->passenger->setFirstName($this->firstName)
-            ->setMiddleName($this->middleName ?? null)
-            ->setLastName($this->lastName)
-            ->setAge($this->age)
-            ->setGender($this->gender);
+    //     $this->passenger->setFirstName($this->firstName)
+    //         ->setMiddleName($this->middleName ?? null)
+    //         ->setLastName($this->lastName)
+    //         ->setAge($this->age)
+    //         ->setGender($this->gender);
 
-        $entityManagerInterface->persist($this->passenger);
-        $entityManagerInterface->flush();
+    //     $entityManagerInterface->persist($this->passenger);
+    //     $entityManagerInterface->flush();
 
-        return $this->passenger;
-    }
+    //     return $this->passenger;
+    // }
 }

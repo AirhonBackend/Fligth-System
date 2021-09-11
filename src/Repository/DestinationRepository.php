@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Destination;
+use App\Model\DestinationModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,16 @@ class DestinationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(DestinationModel $destinationModel)
+    {
+        $destination = new Destination();
+
+        $destination->setName($destinationModel->name);
+
+        $this->getEntityManager()->persist($destination);
+        $this->getEntityManager()->flush();
+
+        return $destination;
+    }
 }

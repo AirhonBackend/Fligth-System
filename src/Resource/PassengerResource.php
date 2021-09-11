@@ -10,6 +10,7 @@ class PassengerResource extends BaseResourceDTO
 {
 
     public int $id;
+
     public string $firstName;
 
     public string $lastName;
@@ -33,6 +34,7 @@ class PassengerResource extends BaseResourceDTO
     private function allocateData()
     {
         return [
+            'id'            =>  $this->id,
             'firstName'     =>  $this->firstName,
             'lastName'      =>  $this->lastName,
             'age'           =>  $this->age,

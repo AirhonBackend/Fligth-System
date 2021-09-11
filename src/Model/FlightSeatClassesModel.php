@@ -9,8 +9,6 @@ class FlightSeatClassesModel
 {
     public $name;
 
-    public $flightSeatClass;
-
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -23,18 +21,5 @@ class FlightSeatClassesModel
         return new static(
             $request->name,
         );
-    }
-
-    public function createFlightSeatClass(EntityManagerInterface $entityManagerInterface)
-    {
-        $this->flightSeatClass = new FlightSeatClasses();
-
-        $this->flightSeatClass->setName($this->name);
-
-        $entityManagerInterface->persist($this->flightSeatClass);
-
-        $entityManagerInterface->flush();
-
-        return $this->flightSeatClass;
     }
 }

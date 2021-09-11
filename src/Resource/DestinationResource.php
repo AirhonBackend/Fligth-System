@@ -17,7 +17,12 @@ class DestinationResource extends BaseResourceDTO
         $this->name = $destination->getName();
         $this->id = $destination->getId();
 
-        $this->data = [
+        $this->data = $this->allocateData();
+    }
+
+    private function allocateData()
+    {
+        return [
             'id'    =>  $this->id,
             'name'  =>  $this->name,
         ];

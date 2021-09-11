@@ -14,7 +14,7 @@ class TerminalResource extends BaseResourceDTO
 
     public function __construct(Terminal $terminal)
     {
-        $this->destination = $terminal->getDestination();
+        $this->destination = new DestinationResource($terminal->getDestination());
         $this->name = $terminal->getName();
         $this->id = $terminal->getId();
 
@@ -24,8 +24,8 @@ class TerminalResource extends BaseResourceDTO
     public function allocateData()
     {
         return [
-            'id'   =>  $this->terminal->id,
-            'name'   =>  $this->terminal->name,
+            'id'   =>  $this->id,
+            'name'   =>  $this->name,
             'destination'   =>  [
                 'name'   =>  $this->destination->name,
                 'id'   =>  $this->destination->id,

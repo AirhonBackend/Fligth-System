@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Passenger;
+use App\Model\PassengerModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,20 @@ class PassengerRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(PassengerModel $passengerModel)
+    {
+        $passenger = new Passenger();
+
+        $passenger->setFirstName($passengerModel->firstName)
+            ->setMiddleName($passengerModel->middleName)
+            ->setLastName($passengerModel->lastName)
+            ->setAge($passengerModel->age)
+            ->setGender($passengerModel->gender);
+
+        $this->getEntityManager()->persist($passenger);
+        $this->getEntityManager()->flush();
+
+        return $passenger;
+    }
 }

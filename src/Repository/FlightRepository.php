@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Destination;
 use App\Entity\Flight;
+use App\Entity\Terminal;
+use App\Model\FlightModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FlightRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Flight::class);
@@ -47,4 +51,21 @@ class FlightRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(FlightModel $flightModel)
+    {
+        $destination = $this->_em->getRepository(Destination::class)->find($flightModel->destinationId);
+        $terminal = $this->_em->getRepository(Terminal::class)->find($flightModel->terminalId);
+
+        $flight = new Flight();
+
+        $flight->setDestination($destination)
+            ->setTerminal($terminal)
+            ->setCapacity($flightModel->capacity);
+
+        $this->_em->persist($flight);
+        $this->_em->flush();
+
+        return $flight;
+    }
 }

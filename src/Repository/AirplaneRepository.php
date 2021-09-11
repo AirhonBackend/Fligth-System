@@ -25,35 +25,6 @@ class AirplaneRepository extends ServiceEntityRepository
         // $this->manager = $entityManagerInterface;
     }
 
-    // /**
-    //  * @return Airplane[] Returns an array of Airplane objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Airplane
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     public function save(AirplaneModel $airplaneDto)
     {
         $airplane = new Airplane();

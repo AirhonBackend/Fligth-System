@@ -3,6 +3,7 @@
 namespace App\Resource;
 
 use App\Entity\Flight;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class FlightResource extends BaseResourceDTO
 {
@@ -14,6 +15,8 @@ class FlightResource extends BaseResourceDTO
 
     public int $id;
 
+    public $seats;
+
     public function __construct(Flight $flight)
     {
         $this->destination = new DestinationResource($flight->getDestination());
@@ -21,6 +24,7 @@ class FlightResource extends BaseResourceDTO
         $this->id = $flight->getId();
         $this->terminal = new TerminalResource($flight->getTerminal());
 
+        $this->seats = $flight->getFlightSeats();
         $this->data = $this->allocateData();
     }
 
@@ -42,10 +46,23 @@ class FlightResource extends BaseResourceDTO
     private function getSeatsAvailable()
     {
         $collect = [];
-        foreach ($this->flight->getFlightSeats()->getValues() as $seat) {
-            $flightSeat = new FlightSeatResource($seat);
-            $collect[] = $flightSeat->data;
+        if (!empty($this->seats)) {
+            foreach ($this->seats as $seat) {
+                $collect[] = [
+                    'passenger' =>  [
+                        'firstName' =>  $seat->getPassenger()->getFirstName(),
+                        'lastName'  =>  $seat->getPassenger()->getLastName(),
+                        'age'       =>  $seat->getPassenger()->getAge(),
+                        'gender'    =>  $seat->getPassenger()->getGender(),
+                    ],
+                    'airplane'  =>  [
+                        'model'     =>  $seat->getAirplane()->getModel(),
+                        'brand'     =>  $seat->getAirplane()->getBrand()
+                    ]
+                ];
+            }
         }
+
         return $collect;
     }
 }

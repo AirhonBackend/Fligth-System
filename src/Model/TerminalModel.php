@@ -12,50 +12,23 @@ class TerminalModel
 {
     public $name;
 
-    public $destinationId;
+    public Destination $destination;
 
     public $terminal;
 
-    public function __construct(string $name, int $destinationId)
+    public function __construct(string $name, Destination $destination = null)
     {
         $this->name = $name;
-        $this->destinationId = $destinationId;
+        $this->destination = $destination;
     }
 
-    public static function fromRequest($request, int $destinationId)
+    public static function fromRequest($request, Destination $destination)
     {
         $request = json_decode($request);
 
         return new static(
             $request->name,
-            $destinationId
+            $destination
         );
-    }
-
-    public function getDestination(DestinationRepository $destinationRepository)
-    {
-        return $destinationRepository->find($this->destinationId);
-    }
-
-    public function createTerminal(EntityManagerInterface $entityManagerInterface)
-    {
-        $this->terminal = new Terminal();
-
-        $destinationRepository = $entityManagerInterface->getRepository(Destination::class);
-
-        $destination = $this->getDestination($destinationRepository);
-
-        if (!$destination) {
-            throw new Exception('Destination not found');
-        }
-
-        $this->terminal->setName($this->name)
-            ->setDestination($destination);
-
-        $entityManagerInterface->persist($this->terminal);
-
-        $entityManagerInterface->flush();
-
-        return $this->terminal;
     }
 }

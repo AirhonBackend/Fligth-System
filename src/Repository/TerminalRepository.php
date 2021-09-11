@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Terminal;
+use App\Model\TerminalModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -59,4 +60,17 @@ class TerminalRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(TerminalModel $terminalModel)
+    {
+        $terminal = new Terminal();
+
+        $terminal->setName($terminalModel->name)
+            ->setDestination($terminalModel->destination);
+
+        $this->getEntityManager()->persist($terminal);
+        $this->getEntityManager()->flush();
+
+        return $terminal;
+    }
 }

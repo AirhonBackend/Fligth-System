@@ -29,11 +29,6 @@ class AirplaneModel
         $this->airplaneId = $airplaneId;
     }
 
-    public function getAirlineCompany(AirlineCompanyRepository $airlineCompanyRepository)
-    {
-        return $airlineCompanyRepository->find($this->airlineCompanyId);
-    }
-
     public static function fromRequest($request, AirlineCompany $airlineCompany)
     {
         $request = json_decode($request);
@@ -55,10 +50,5 @@ class AirplaneModel
             $request->model ?? null,
             $airplaneId
         );
-    }
-
-    public function getAirplane(AirplaneRepository $airplaneRepository)
-    {
-        return $airplaneRepository->find($this->airplaneId);
     }
 }

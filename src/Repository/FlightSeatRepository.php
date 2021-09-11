@@ -2,7 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Airplane;
 use App\Entity\FlightSeat;
+use App\Entity\FlightSeatClasses;
+use App\Entity\Passenger;
+use App\Model\FlightSeatModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +51,21 @@ class FlightSeatRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(FlightSeatModel $flightSeatModel, Passenger $passenger, FlightSeatClasses $flightSeatClasses, Airplane $airplane)
+    {
+        $flightSeat = new FlightSeat();
+
+        $flightSeat->setNumber($flightSeatModel->seatNumber)
+            ->setFlight($flightSeatModel->flight)
+            ->setAirplane($airplane)
+            ->setPassenger($passenger)
+            ->setFlightSeatClass($flightSeatClasses)
+            ->setStatus($flightSeatModel->status);
+
+        $this->_em->persist($flightSeat);
+        $this->_em->flush();
+
+        return $flightSeat;
+    }
 }

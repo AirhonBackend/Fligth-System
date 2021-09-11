@@ -9,8 +9,6 @@ class DestinationModel
 {
     public $name;
 
-    public $destination;
-
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -23,17 +21,5 @@ class DestinationModel
         return new static(
             $request->name
         );
-    }
-
-    public function createDestination(EntityManagerInterface $entityManagerInterface)
-    {
-        $this->destination = new Destination();
-
-        $this->destination->setName($this->name);
-
-        $entityManagerInterface->persist($this->destination);
-        $entityManagerInterface->flush();
-
-        return $this->destination;
     }
 }

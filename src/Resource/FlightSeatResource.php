@@ -9,25 +9,26 @@ use Symfony\Component\HttpFoundation\Response;
 class FlightSeatResource extends BaseResourceDTO
 {
 
+    public string $status;
+
+    public string $seatNumber;
+
     public FlightResource $flight;
 
     public PassengerResource $passenger;
 
-    public AirplaneResource $airplane;
-
-    public string $status;
-
-    public string $seatNumber;
+    public  AirplaneResource $airplane;
 
     public FlightSeatClassesResource $seatClass;
 
     public function __construct(FlightSeat $flightSeat)
     {
+        $this->status = $flightSeat->getStatus();
+        $this->seatNumber = $flightSeat->getNumber();
+
         $this->flight = new FlightResource($flightSeat->getFlight());
         $this->passenger = new PassengerResource($flightSeat->getPassenger());
         $this->airplane = new AirplaneResource($flightSeat->getAirplane());
-        $this->status = $flightSeat->getStatus();
-        $this->seatNumber = $flightSeat->getNumber();
         $this->seatClass = new FlightSeatClassesResource($flightSeat->getFlightSeatClass());
 
         $this->data = $this->allocateData();
