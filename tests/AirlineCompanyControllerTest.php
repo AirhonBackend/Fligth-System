@@ -8,7 +8,7 @@ class AirlineCompanyControllerTest extends ApiTestCase
 {
     public function testStoreAirlineCompany(): void
     {
-        $response = static::createClient()->request('POST', '/airline/new', ['json' => [
+        $response = static::createClient()->request('POST', '/airlines', ['json' => [
             'carrierName' => 'Airline 1',
             'headQuarters' => 'headquarters 2',
         ]]);
@@ -22,7 +22,7 @@ class AirlineCompanyControllerTest extends ApiTestCase
 
     public function testCollectionOfAirlineCompany(): void
     {
-        $response = static::createClient()->request('GET', '/airline');
+        $response = static::createClient()->request('GET', '/airlines');
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([

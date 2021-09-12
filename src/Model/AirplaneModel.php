@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class AirplaneModel
 {
-    public AirlineCompany $airlineCompany;
+    public $airlineCompany;
 
     /**
      * @Assert\NotNull(message="Brand is required")
@@ -31,12 +31,12 @@ class AirplaneModel
         $this->airplaneId = $airplaneId;
     }
 
-    public static function fromRequest($request, AirlineCompany $airlineCompany)
+    public static function fromRequest($request, AirlineCompany $airlineCompany = null)
     {
         $request = json_decode($request);
 
         return new static(
-            $airlineCompany,
+            $airlineCompany ?? null,
             $request->brand ?? null,
             $request->model ?? null,
         );

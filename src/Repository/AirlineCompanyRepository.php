@@ -49,9 +49,13 @@ class AirlineCompanyRepository extends ServiceEntityRepository
     }
     */
 
-    public function save(AirlineCompanyModel $airlineCompanyModel)
+    public function save(AirlineCompanyModel $airlineCompanyModel, AirlineCompany $airlineCompanyEntity = null)
     {
         $airlineCompany = new AirlineCompany();
+
+        if ($airlineCompanyEntity) {
+            $airlineCompany = $airlineCompanyEntity;
+        }
 
         $airlineCompany->setCarrierName($airlineCompanyModel->carrierName)
             ->setHeadquarters($airlineCompanyModel->headQuarters);

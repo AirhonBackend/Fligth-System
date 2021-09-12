@@ -8,7 +8,7 @@ class DestinationControllerTest extends ApiTestCase
 {
     public function testStoreDestination(): void
     {
-        $response = static::createClient()->request('POST', '/destination/new', ['json' => [
+        $response = static::createClient()->request('POST', '/destinations', ['json' => [
             'name'  =>  'North America'
         ]]);
 
@@ -18,7 +18,7 @@ class DestinationControllerTest extends ApiTestCase
 
     public function testCollectionOfDestinations(): void
     {
-        $response = static::createClient()->request('GET', '/destination');
+        $response = static::createClient()->request('GET', '/destinations');
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([

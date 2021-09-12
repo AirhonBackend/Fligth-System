@@ -25,13 +25,17 @@ class AirplaneRepository extends ServiceEntityRepository
         // $this->manager = $entityManagerInterface;
     }
 
-    public function save(AirplaneModel $airplaneDto)
+    public function save(AirplaneModel $airplaneDto, Airplane $airplaneEntity = null)
     {
         $airplane = new Airplane();
 
+        if ($airplaneEntity) {
+            $airplane = $airplaneEntity;
+        }
+
         $airplane->setBrand($airplaneDto->brand)
             ->setModel($airplaneDto->model)
-            ->setAirlineCompany($airplaneDto->airlineCompany);
+            ->setAirlineCompany($airplaneDto->airlineCompany === null ? $airplane->getAirlineCompany() : $airplaneDto->airlineCompany);
 
         $this->getEntityManager()->persist($airplane);
         $this->getEntityManager()->flush();

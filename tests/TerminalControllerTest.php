@@ -8,7 +8,7 @@ class TerminalControllerTest extends ApiTestCase
 {
     public function testStoreTerminal(): void
     {
-        $response = static::createClient()->request('GET', '/destination/1/terminal/new', ['json' => [
+        $response = static::createClient()->request('GET', '/destinations/1/terminals', ['json' => [
             'name'  =>  'Terminal 2'
         ]]);
 

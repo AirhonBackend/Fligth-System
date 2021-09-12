@@ -3,28 +3,29 @@
 namespace App\Controller\AirlineCompany;
 
 use App\Controller\ApiBaseController;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Entity\AirlineCompany;
 use App\Model\AirlineCompanyModel;
 use App\Repository\AirlineCompanyRepository;
 use App\Resource\AirlineCompanyResource;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
-class CreateAirlineCompanyController extends ApiBaseController
+class UpdateAirlineCompanyController extends ApiBaseController
 {
-
     /**
-     * @Route("/airlines", name="create_airline_company", methods="POST")
+     * @Route("/airlines/{id}", name="update_irline_company", methods="PUT")
      */
-    public function __invoke(Request $request, AirlineCompanyRepository $airlineCompanyRepository, ValidatorInterface $validator): JsonResponse
+
+    public function __invoke(Request $request, AirlineCompany $airlineCompany, AirlineCompanyRepository $airlineCompanyRepository)
     {
         $airlineDto = AirlineCompanyModel::fromRequest($request->getContent());
         $validation = $this->validator->validateDataObjects($airlineDto);
         if ($validation->fails()) {
             return $this->json(['errors' => $validation->getErrorMessages()], JsonResponse::HTTP_BAD_REQUEST);
         }
-        $response = new AirlineCompanyResource($airlineCompanyRepository->save($airlineDto));
+        $response = new AirlineCompanyResource($airlineCompanyRepository->save($airlineDto, $airlineCompany));
         return $response->toJson();
     }
 }

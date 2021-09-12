@@ -49,9 +49,13 @@ class DestinationRepository extends ServiceEntityRepository
     }
     */
 
-    public function save(DestinationModel $destinationModel)
+    public function save(DestinationModel $destinationModel, Destination $destinationEntity = null)
     {
         $destination = new Destination();
+
+        if ($destinationEntity) {
+            $destination = $destinationEntity;
+        }
 
         $destination->setName($destinationModel->name);
 

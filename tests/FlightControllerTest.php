@@ -8,7 +8,7 @@ class FlightControllerTest extends ApiTestCase
 {
     public function testStoreFlightSeat(): void
     {
-        $response = static::createClient()->request('POST', '/flight-seat-class/new', ['json' => [
+        $response = static::createClient()->request('POST', '/flight-seat-classes', ['json' => [
             'name' =>  'economy',
         ]]);
 
@@ -20,7 +20,7 @@ class FlightControllerTest extends ApiTestCase
 
     public function testStoreFlight(): void
     {
-        $response = static::createClient()->request('POST', '/flight/new', ['json' => [
+        $response = static::createClient()->request('POST', '/flights', ['json' => [
             'destinationId' =>  1,
             'terminalId' =>  1,
             'airplaneId' =>  1,
@@ -42,7 +42,7 @@ class FlightControllerTest extends ApiTestCase
 
     public function testFlightCollection(): void
     {
-        $response = static::createClient()->request('GET', '/flight');
+        $response = static::createClient()->request('GET', '/flights');
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
@@ -64,7 +64,7 @@ class FlightControllerTest extends ApiTestCase
 
     public function testFlightBooking(): void
     {
-        $response = static::createClient()->request('POST', '/book/seat/104', ['json' => [
+        $response = static::createClient()->request('POST', '/flights/1/book', ['json' => [
             'passengerId'   =>  1,
             'flightSeatClassId'   =>  1,
         ]]);

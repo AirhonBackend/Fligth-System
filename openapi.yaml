@@ -8,10 +8,10 @@ servers:
   - url: http://localhost:8080/
 
 paths:
-  /airline-company/new:
+  /airlines:
     post:
       tags:
-        - Airline Company
+        - Airlines
       description: Endpoint to create new airline company
       requestBody:
         content:
@@ -33,24 +33,68 @@ paths:
               schema:
                 type: object
                 properties:
-                  success:
-                    type: boolean
-                    example: true
-                  message:
+                  carrierName:
                     type: string
-                    example: "New airlines has been created"
-                  data:
-                    type: object
-                    example:
-                      {
-                        "carrierName": "sample carrier name",
-                        "headquarters": "sample headquarters",
-                      }
-  /airline-company:
+                    example: "sample carrier name"
+                  headquarters:
+                    type: string
+                    example: "sample headquarters name"
+        400:
+          description: Returns all erros
+          content:
+            application/json:
+              example:
+                "errors":
+                  {
+                    "carrierName": ["Carrier name is required"],
+                    "headQuarters": ["Headquarters is required"],
+                  }
+  /airlines/:
     get:
       tags:
-        - Airline Company
+        - Airlines
       description: Endpoint to get all airline company
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example:
+                [
+                  {
+                    "carrierName": "sample carrier name",
+                    "headquarters": "sample headquarters",
+                  },
+                  {
+                    "carrierName": "sample carrier name",
+                    "headquarters": "sample headquarters",
+                  },
+                ]
+  /airlines/{airlineId}:
+    get:
+      tags:
+        - Airlines
+      description: Endpoint to get all airline company
+      parameters:
+        - in: path
+          name: airlineId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Airline Company ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carrierName:
+                  type: string
+                  example: New Carrier
+                headquarters:
+                  type: string
+                  example: New Headquarters
       responses:
         200:
           description: Returns all examples
@@ -59,33 +103,64 @@ paths:
               schema:
                 type: object
                 properties:
-                  success:
-                    type: boolean
-                    example: true
-                  message:
+                  carrierName:
                     type: string
-                    example: "New airlines has been created"
-                  data:
-                    type: object
-                    example:
-                      {
-                        "carrierName": "sample carrier name",
-                        "headquarters": "sample headquarters",
-                      }
+                    example: "sample carrier name"
+                  headquarters:
+                    type: string
+                    example: "sample headquarters"
 
-  /airplane/{airlineCompanyId}/airplane/new:
-    post:
+  /airlines/{airlineId}/:
+    put:
       tags:
-        - Airplane
-      description: Endpoint to create new airplane
+        - Airlines
+      description: Endpoint to get all airline company
       parameters:
         - in: path
-          name: airlineCompanyId
+          name: airlineId
           required: true
           schema:
             type: string
             example: 1
           description: Enter Airline Company ID
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  carrierName:
+                    type: string
+                    example: "sample carrier name"
+                  headquarters:
+                    type: string
+                    example: "sample headquarters"
+        400:
+          description: Returns all erros
+          content:
+            application/json:
+              example:
+                "errors":
+                  {
+                    "carrierName": ["Carrier name is required"],
+                    "headQuarters": ["Headquarters is required"],
+                  }
+
+  /airlines/{airlineId}/airplanes:
+    post:
+      tags:
+        - Airplanes
+      description: Endpoint to create new airplane
+      parameters:
+        - in: path
+          name: airlineId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Airline ID
       requestBody:
         content:
           application/json:
@@ -103,54 +178,127 @@ paths:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example:
-                      {
-                        "brand": "Fujidenzo",
-                        "model": "H10213",
-                        "airplaneCompany":
-                          { "carrierName": "test", "headQuarters": "test" },
-                      }
+              example:
+                {
+                  "brand": "Fujidenzo",
+                  "model": "H10213",
+                  "airplaneCompany":
+                    { "carrierName": "test", "headQuarters": "test" },
+                }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                "errors":
+                  {
+                    "brand": ["Brand is required"],
+                    "model": ["Model is required"],
+                  }
 
-  /airplane/{airlineCompanyId}/airplane:
+  /airplanes:
     get:
       tags:
-        - Airplane
+        - Airplanes
       description: Endpoint to get collection of airplanes
-      parameters:
-        - in: path
-          name: airlineCompanyId
-          required: true
-          schema:
-            type: string
-            example: 1
-          description: Enter Airline Company ID
       responses:
         200:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example:
-                       { 
-                          "brand": "Fujidenzo",
-                          "model": "H10213",
-                          "airplaneCompany":
-                            { "carrierName": "test", "headQuarters": "test" },
-                        }
+              example:
+                [
+                  {
+                    "brand": "Fujidenzo",
+                    "model": "H10213",
+                    "airplaneCompany":
+                      { "carrierName": "test", "headQuarters": "test" },
+                  },
+                  {
+                    "brand": "Fujidenzo",
+                    "model": "H10213",
+                    "airplaneCompany":
+                      { "carrierName": "test", "headQuarters": "test" },
+                  },
+                ]
 
-  /destination/new:
+  /airplanes/{airplaneId}:
+    get:
+      tags:
+        - Airplanes
+      description: Endpoint to get collection of airplanes
+      parameters:
+        - in: path
+          name: airplaneId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Airplane ID
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example:
+                {
+                  "brand": "Fujidenzo",
+                  "model": "H10213",
+                  "airplaneCompany":
+                    { "carrierName": "test", "headQuarters": "test" },
+                }
+  /airplanes/{airplaneId}/:
+    put:
+      tags:
+        - Airplanes
+      description: Endpoint to get collection of airplanes
+      parameters:
+        - in: path
+          name: airplaneId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Airplane ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand:
+                  type: string
+                  example: New Carrier
+                model:
+                  type: string
+                  example: New Headquarters
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example:
+                {
+                  "brand": "Fujidenzo",
+                  "model": "H10213",
+                  "airplaneCompany":
+                    { "carrierName": "test", "headQuarters": "test" },
+                }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                "errors":
+                  {
+                    "brand": ["Brand is required"],
+                    "model": ["Model is required"],
+                  }
+
+  /destinations:
     post:
       tags:
-        - Destination
+        - Destinations
       description: Endpoint to create new destination
       requestBody:
         content:
@@ -166,33 +314,83 @@ paths:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { "name": "North America" }
-  /destination:
+              example: { "name": "North America" }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example: { "errors": { "name": ["Name is required"] } }
+
+  /destinations/:
     get:
       tags:
-        - Destination
+        - Destinations
       description: Endpoint to get all destination
       responses:
         200:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { "name": "North America" }
+              example: [{ "name": "North America" }, { "name": "Asia" }]
 
-  /passenger/new:
+  /destinations/{destinationId}:
+    get:
+      tags:
+        - Destinations
+      description: Endpoint to get all destination
+      parameters:
+        - in: path
+          name: destinationId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Destination Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: New York
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example: { "name": "North America" }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example: { "errors": { "name": ["Name is required"] } }
+
+  /destinations/{destinationId}/:
+    put:
+      tags:
+        - Destinations
+      description: Endpoint to get all destination
+      parameters:
+        - in: path
+          name: destinationId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Destination Id
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example: { "name": "North America" }
+
+  /passengers:
     post:
       tags:
-        - Passenger
+        - Passengers
       description: Endpoint to create new passenger
       requestBody:
         content:
@@ -220,45 +418,148 @@ paths:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { 
-                      "firstName": "John",
-                      "middelName": "Middle",
-                      "lastName": "Doe",
-                      "age": 25,
-                      "gender": "Male",
-                   }
-  /passenger:
+              example:
+                {
+                  "firstName": "John",
+                  "middelName": "Middle",
+                  "lastName": "Doe",
+                  "age": 25,
+                  "gender": "Male",
+                }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                {
+                  "errors":
+                    {
+                      "firstName": ["First name field is required"],
+                      "lastName": ["Last name field is required"],
+                      "age": ["Age field is required"],
+                      "gender": ["Gender field is required"],
+                    },
+                }
+  /passengers/:
     get:
       tags:
-        - Passenger
+        - Passengers
       description: Endpoint to get all passenger
       responses:
         200:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { 
-                      "firstName": "John",
-                      "middelName": "Middle",
-                      "lastName": "Doe",
-                      "age": 25,
-                      "gender": "Male",
-                   }
+              example:
+                [
+                  {
+                    "firstName": "John",
+                    "middelName": "Middle",
+                    "lastName": "Doe",
+                    "age": 25,
+                    "gender": "Male",
+                  },
+                  {
+                    "firstName": "John",
+                    "middelName": "Middle",
+                    "lastName": "Doe",
+                    "age": 25,
+                    "gender": "Male",
+                  },
+                ]
 
-  /destination/{destinationId}/terminal/new:
+  /passengers/{passengerId}:
+    get:
+      tags:
+        - Passengers
+      description: Endpoint to get all passenger
+      parameters:
+        - in: path
+          name: passengerId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Passenger Id
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example:
+                {
+                  "firstName": "John",
+                  "middelName": "Middle",
+                  "lastName": "Doe",
+                  "age": 25,
+                  "gender": "Male",
+                }
+  /passengers/{passengerId}/:
+    put:
+      tags:
+        - Passengers
+      description: Endpoint to get all passenger
+      parameters:
+        - in: path
+          name: passengerId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Passenger Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                  example: John
+                middlename:
+                  type: string
+                  example: Middle
+                lastname:
+                  type: string
+                  example: Doe
+                age:
+                  type: integer
+                  example: 29
+                gender:
+                  type: string
+                  example: Male
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example:
+                {
+                  "firstName": "John",
+                  "middelName": "Middle",
+                  "lastName": "Doe",
+                  "age": 25,
+                  "gender": "Male",
+                }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                {
+                  "errors":
+                    {
+                      "firstName": ["First name field is required"],
+                      "lastName": ["Last name field is required"],
+                      "age": ["Age field is required"],
+                      "gender": ["Gender field is required"],
+                    },
+                }
+
+  /destinations/{destinationId}/terminals:
     post:
       tags:
-        - Terminal
+        - Terminals
       description: Endpoint to create new terminal
       parameters:
         - in: path
@@ -282,18 +583,28 @@ paths:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { 
-                      "name": "Terminal 1",
-                   }
-  /destination/{destinationId}/terminal:
+              example: { "name": "Terminal 1" }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example: { "errors": { "name": ["Name is required"] } }
+
+  /terminals:
     get:
       tags:
-        - Terminal
+        - Terminals
+      description: Endpoint get all terminal
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example: [{ "name": "Terminal 1" }, { "name": "Terminal 1" }]
+  /terminals/{terminalId}:
+    get:
+      tags:
+        - Terminals
       description: Endpoint get all terminal
       parameters:
         - in: path
@@ -302,7 +613,7 @@ paths:
           schema:
             type: string
             example: 1
-          description: Enter Destination ID
+          description: Terminal ID
       responses:
         200:
           description: Returns all examples
@@ -313,13 +624,50 @@ paths:
                 properties:
                   data:
                     type: object
-                    example: { 
-                      "name": "Terminal 1",
-                   }
-  /flight/new:
+                    example: { "name": "Terminal 1" }
+
+  /terminals/{terminalId}/:
+    put:
+      tags:
+        - Terminals
+      description: Endpoint get all terminal
+      parameters:
+        - in: path
+          name: destinationId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Terminal ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Terminal 1
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    example: { "name": "Terminal 1" }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example: { "errors": { "name": ["Name is required"] } }
+  /flights:
     post:
       tags:
-        - Flight
+        - Flights
       description: Endpoint to create a new flight
       requestBody:
         content:
@@ -333,9 +681,6 @@ paths:
                 terminalId:
                   type: integer
                   example: 1
-                airplaneId:
-                  type: integer
-                  example: 1
                 capacity:
                   type: integer
                   example: 20
@@ -344,71 +689,114 @@ paths:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { 
-                      "destination": {
-                          "name": "North America",
-                          "id": 1
-                      },
-                      "terminal": {
-                          "name": "Test",
-                          "id": 1
-                      },
-                   }
-  /flight:
+              example:
+                {
+                  "destination": { "name": "North America", "id": 1 },
+                  "terminal": { "name": "Test", "id": 1 },
+                  "seats": [],
+                }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                {
+                  "errors":
+                    {
+                      "destinationId": ["Destination id field is required"],
+                      "terminalId": ["Terminal id field is required"],
+                      "capacity": ["Capacity field is required"],
+                    },
+                }
+        404:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                {
+                  "errors":
+                    {
+                      "destination": ["Destination not found."],
+                      "terminal": ["Terminalnot found."],
+                    },
+                }
+  /flights/:
     get:
       tags:
-        - Flight
+        - Flights
       description: Endpoint to create a new flight
       responses:
         200:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { 
-                      "destination": {
-                          "name": "North America",
-                          "id": 1
-                      },
-                      "terminal": {
-                          "name": "Test",
-                          "id": 1
-                      },
-                      "seats": [
+              example:
+                {
+                  "destination": { "name": "North America", "id": 1 },
+                  "terminal": { "name": "Test", "id": 1 },
+                  "seats":
+                    [
+                      {
+                        "passenger":
                           {
-                              "passenger": {
-                                  "firstName": "Airhon Carlo",
-                                  "lastName": "Cortez",
-                                  "age": "24",
-                                  "gender": "Male",
-                                  "id": 5
-                              },
-                              "seatClass": {
-                                  "name": "economy",
-                                  "id": 1
-                              },
-                              "airplane": {
-                                  "model": "H10213",
-                                  "brand": "Fujidenzo"
-                              },
-                              "status": "occupied",
-                              "seatNumber": "DE6JO1"
-                          }
-                      ]
-                   }
-  /flight-seat-class/new:
+                            "firstName": "Airhon Carlo",
+                            "lastName": "Cortez",
+                            "age": "24",
+                            "gender": "Male",
+                            "id": 5,
+                          },
+                        "seatClass": { "name": "economy", "id": 1 },
+                        "airplane": { "model": "H10213", "brand": "Fujidenzo" },
+                        "status": "occupied",
+                        "seatNumber": "DE6JO1",
+                      },
+                    ],
+                }
+  /flights/{flightId}:
+    get:
+      tags:
+        - Flights
+      description: Endpoint to create a new flight
+      parameters:
+        - in: path
+          name: flightId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Flight Id
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example:
+                {
+                  "destination": { "name": "North America", "id": 1 },
+                  "terminal": { "name": "Test", "id": 1 },
+                  "seats":
+                    [
+                      {
+                        "passenger":
+                          {
+                            "firstName": "Airhon Carlo",
+                            "lastName": "Cortez",
+                            "age": "24",
+                            "gender": "Male",
+                            "id": 5,
+                          },
+                        "seatClass": { "name": "economy", "id": 1 },
+                        "airplane": { "model": "H10213", "brand": "Fujidenzo" },
+                        "status": "occupied",
+                        "seatNumber": "DE6JO1",
+                      },
+                    ],
+                }
+
+  /flight-seat-classes:
     post:
       tags:
-        - Flight Seat Class
+        - Flight Seat Classes
       description: Endpoint to create new flight seat class
       requestBody:
         content:
@@ -424,33 +812,81 @@ paths:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { "name": "Business class"}
-  /flight-seat-class:
+              example: { "name": "Business class" }
+        400:
+          description: Returns all examples
+          content:
+            application/json:
+              example: { "errors": { "name": ["Name is required"] } }
+  /flight-seat-classes/:
     get:
       tags:
-        - Flight Seat Class
+        - Flight Seat Classes
       description: Endpoint to get all seat class
       responses:
         200:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { "name": "Business class"}
+              example: [{ "name": "Business class" }, { "name": "Economy" }]
+  /flight-seat-classes/{flightSeatClassId}:
+    get:
+      tags:
+        - Flight Seat Classes
+      description: Endpoint to get all seat class
+      parameters:
+        - in: path
+          name: flightSeatClassId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Flight Seat Class Id
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example: { "name": "Economy" }
+        400:
+          description: Returns all examples
+          content:
+            application/json:
+              example: { "errors": { "name": ["Name is required"] } }
 
-  /book/seat/{flightId}:
+  /flight-seat-classes/{flightSeatClassId}/:
+    put:
+      tags:
+        - Flight Seat Classes
+      description: Endpoint to get all seat class
+      parameters:
+        - in: path
+          name: flightSeatClassId
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter Flight Seat Class Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: First Class
+      responses:
+        200:
+          description: Returns all examples
+          content:
+            application/json:
+              example: { "name": "Economy" }
+
+  /flights/{flightId}/book:
     post:
       tags:
-        - Book Flight
+        - Flights
       description: Endpoint to book flight
       parameters:
         - in: path
@@ -472,14 +908,63 @@ paths:
                 flightSeatClassId:
                   type: integer
                   example: 1
+                airplaneId:
+                  type: integer
+                  example: 1
       responses:
         200:
           description: Returns all examples
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    example: { "name": "Business class"}
+              example:
+                {
+                  "destination": { "id": "1", "name": "North America" },
+                  "passenger":
+                    {
+                      "id": 2,
+                      "firstName": "Airhon Carlo",
+                      "lastName": "Cortez",
+                      "age": 19,
+                      "gender": "Male",
+                    },
+                  "seatClass": { "id": 1, "name": "Business Class" },
+                  "airplane":
+                    {
+                      "id": 1,
+                      "brand": "Toyotoa",
+                      "model": "TTOEA13",
+                      "airplaneCompany":
+                        {
+                          "id": 1,
+                          "carrierName": "National Airlines",
+                          "headQuarters": "Headquarters 5",
+                        },
+                    },
+                }
+        400:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                {
+                  "errors":
+                    {
+                      "airplaneId": ["Airplane Id field is required"],
+                      "passengerId": ["Passenger Id field is required"],
+                      "flightSeatClassId":
+                        ["Flight seat class Id field is required"],
+                    },
+                }
+        404:
+          description: Returns all errors
+          content:
+            application/json:
+              example:
+                {
+                  "errors":
+                    {
+                      "airplane": ["Airplane not found."],
+                      "passengerId": ["Passenger not found."],
+                      "flightSeatClassId": ["Flight seat class not found."],
+                    },
+                }

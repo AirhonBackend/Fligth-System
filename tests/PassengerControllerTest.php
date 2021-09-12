@@ -8,7 +8,7 @@ class PassengerControllerTest extends ApiTestCase
 {
     public function testSomething(): void
     {
-        $response = static::createClient()->request('POST', '/passsenger/new', ['json' => [
+        $response = static::createClient()->request('POST', '/passsengers', ['json' => [
             'firstName' =>  'John',
             'middleName' =>  'Middle',
             'lastName' =>  'Cortez',

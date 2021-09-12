@@ -49,9 +49,13 @@ class FlightSeatClassesRepository extends ServiceEntityRepository
     }
     */
 
-    public function save(FlightSeatClassesModel $flightSeatClassesModel)
+    public function save(FlightSeatClassesModel $flightSeatClassesModel, FlightSeatClasses $flightSeatClassesEntity = null)
     {
         $flightSeatClass = new FlightSeatClasses();
+
+        if ($flightSeatClassesEntity) {
+            $flightSeatClass = $flightSeatClassesEntity;
+        }
 
         $flightSeatClass->setName($flightSeatClassesModel->name);
 
