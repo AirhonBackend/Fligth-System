@@ -2,6 +2,7 @@
 
 namespace App\Controller\Flight\FlightSeat;
 
+use App\Controller\ApiBaseController;
 use App\Entity\Flight;
 use App\Entity\Passenger;
 use App\Model\FlightSeatModel;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BookFlightController extends AbstractController
+class BookFlightController extends ApiBaseController
 {
     /**
      * @Route("/flights/{id}/book", name="book_flight", methods="POST")
@@ -25,14 +26,32 @@ class BookFlightController extends AbstractController
 
     public function __invoke(Request $request, Flight $flight, FlightSeatRepository $flightSeatRepository, PassengerRepository $passengerRepository, FlightSeatClassesRepository $flightSeatClassesRepository, AirplaneRepository $airplaneRepository): JsonResponse
     {
-        $payload = FlightSeatModel::fromRequest($request->getContent(), $flight);
+        $bookFlightDto = FlightSeatModel::fromRequest($request->getContent(), $flight);
 
-        $passenger = $passengerRepository->find($payload->passengerId);
-        $flightSeatClass = $flightSeatClassesRepository->find($payload->flightSeatClassId);
-        $airplane = $airplaneRepository->find($payload->airplaneId);
+        $validation = $this->validator->validateDataObjects($bookFlightDto);
 
-        $response = new FlightSeatResource($flightSeatRepository->save($payload, $passenger, $flightSeatClass, $airplane));
+        if ($validation->fails()) {
+            return $this->json(['errors' => $validation->getErrorMessages()], JsonResponse::HTTP_BAD_REQUEST);
+        }
 
+        $passenger = $passengerRepository->find($bookFlightDto->passengerId);
+        if (!$passenger) {
+            return $this->json(['errors' => $this->notFoundErrorResponse('Passsenger')], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $flightSeatClass = $flightSeatClassesRepository->find($bookFlightDto->flightSeatClassId);
+
+        if (!$flightSeatClass) {
+            return $this->json(['errors' => $this->notFoundErrorResponse('FlightSeatClass')], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $airplane = $airplaneRepository->find($bookFlightDto->airplaneId);
+
+        if (!$airplane) {
+            return $this->json(['errors' => $this->notFoundErrorResponse('Airplane')], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $response = new FlightSeatResource($flightSeatRepository->save($bookFlightDto, $passenger, $flightSeatClass, $airplane));
         return $response->toJson();
     }
 }

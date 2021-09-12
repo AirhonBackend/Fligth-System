@@ -3,18 +3,20 @@
 namespace App\Model;
 
 use App\Entity\AirlineCompany;
-use App\Entity\Airplane;
-use App\Repository\AirlineCompanyRepository;
-use App\Repository\AirplaneRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AirplaneModel
 {
     public AirlineCompany $airlineCompany;
 
+    /**
+     * @Assert\NotNull(message="Brand is required")
+     */
     public $brand;
 
+    /**
+     * @Assert\NotNull(message="Model is required")
+     */
     public $model;
 
     public $airplane;
@@ -35,8 +37,8 @@ class AirplaneModel
 
         return new static(
             $airlineCompany,
-            $request->brand,
-            $request->model,
+            $request->brand ?? null,
+            $request->model ?? null,
         );
     }
 

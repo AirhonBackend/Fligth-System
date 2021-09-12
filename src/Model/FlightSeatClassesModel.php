@@ -2,14 +2,17 @@
 
 namespace App\Model;
 
-use App\Entity\FlightSeatClasses;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class FlightSeatClassesModel
 {
+
+    /**
+     * @Assert\NotNull(message="Name is required")
+     */
     public $name;
 
-    public function __construct(string $name)
+    public function __construct(string $name = null)
     {
         $this->name = $name;
     }
@@ -19,7 +22,7 @@ class FlightSeatClassesModel
         $request = json_decode($request);
 
         return new static(
-            $request->name,
+            $request->name ?? null,
         );
     }
 }

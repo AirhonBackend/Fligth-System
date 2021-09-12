@@ -2,29 +2,27 @@
 
 namespace App\Model;
 
-use App\Entity\Flight;
-use App\Entity\Airplane;
-use App\Entity\Terminal;
-use App\Entity\FlightSeat;
-use App\Entity\Destination;
-use Illuminate\Support\Str;
-use App\Repository\AirplaneRepository;
-use App\Repository\TerminalRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\DestinationRepository;
-use App\Model\FlightSeatModel;
-use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class FlightModel
 {
 
+    /**
+     * @Assert\NotNull(message="Destination id field is required")
+     */
     public $destinationId;
 
+    /**
+     * @Assert\NotNull(message="Terminal id field is required")
+     */
     public $terminalId;
 
+    /**
+     * @Assert\NotNull(message="Capacity field is required")
+     */
     public $capacity;
 
-    public function __construct(int $destinationId, int $terminalId, int $capacity)
+    public function __construct(int $destinationId = null, int $terminalId = null, int $capacity = null)
     {
         $this->destinationId = $destinationId;
         $this->terminalId = $terminalId;
@@ -35,9 +33,9 @@ class FlightModel
     {
         $request = json_decode($request);
         return new static(
-            $request->destinationId,
-            $request->terminalId,
-            $request->capacity,
+            $request->destinationId ?? null,
+            $request->terminalId ?? null,
+            $request->capacity ?? null,
         );
     }
 }

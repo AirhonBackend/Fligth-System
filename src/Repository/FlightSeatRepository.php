@@ -23,35 +23,6 @@ class FlightSeatRepository extends ServiceEntityRepository
         parent::__construct($registry, FlightSeat::class);
     }
 
-    // /**
-    //  * @return FlightSeat[] Returns an array of FlightSeat objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?FlightSeat
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     public function save(FlightSeatModel $flightSeatModel, Passenger $passenger, FlightSeatClasses $flightSeatClasses, Airplane $airplane)
     {
         $flightSeat = new FlightSeat();
@@ -64,6 +35,9 @@ class FlightSeatRepository extends ServiceEntityRepository
             ->setStatus($flightSeatModel->status);
 
         $this->_em->persist($flightSeat);
+
+        $flightSeat->getFlight()->decrementCapacity();
+
         $this->_em->flush();
 
         return $flightSeat;

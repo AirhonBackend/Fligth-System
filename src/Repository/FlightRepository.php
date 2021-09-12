@@ -52,11 +52,8 @@ class FlightRepository extends ServiceEntityRepository
     }
     */
 
-    public function save(FlightModel $flightModel)
+    public function save(FlightModel $flightModel, Destination $destination, Terminal $terminal)
     {
-        $destination = $this->_em->getRepository(Destination::class)->find($flightModel->destinationId);
-        $terminal = $this->_em->getRepository(Terminal::class)->find($flightModel->terminalId);
-
         $flight = new Flight();
 
         $flight->setDestination($destination)

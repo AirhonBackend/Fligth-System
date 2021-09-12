@@ -28,8 +28,8 @@ class FlightSeatResource extends BaseResourceDTO
 
         $this->flight = new FlightResource($flightSeat->getFlight());
         $this->passenger = new PassengerResource($flightSeat->getPassenger());
-        $this->airplane = new AirplaneResource($flightSeat->getAirplane());
         $this->seatClass = new FlightSeatClassesResource($flightSeat->getFlightSeatClass());
+        $this->airplane = new AirplaneResource($flightSeat->getAirplane());
 
         $this->data = $this->allocateData();
     }
@@ -37,26 +37,10 @@ class FlightSeatResource extends BaseResourceDTO
     private function allocateData()
     {
         return [
-            'destination'   =>  [
-                'id'    =>  $this->flight->destination->id,
-                'name'  =>  $this->flight->destination->name,
-            ],
-            'passenger' =>  [
-                'firstName' =>  $this->passenger->firstName,
-                'lastName'  =>  $this->passenger->lastName,
-                'age'       =>  $this->passenger->age,
-                'gender'    =>  $this->passenger->gender,
-                'id'        =>  $this->passenger->id
-            ],
-            'seatClass' =>  [
-                'name'      =>  $this->seatClass->name,
-                'id'        =>  $this->seatClass->id
-            ],
-            'airplane'  =>  [
-                'id'    =>  $this->airplane->id,
-                'model' =>  $this->airplane->model,
-                'brand' =>  $this->airplane->brand
-            ]
+            'destination'   =>  $this->flight->destination->data,
+            'passenger'     =>  $this->passenger->data,
+            'seatClass'     =>  $this->seatClass->data,
+            'airplane'      =>  $this->airplane->data
         ];
     }
 }

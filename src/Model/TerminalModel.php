@@ -3,20 +3,21 @@
 namespace App\Model;
 
 use App\Entity\Destination;
-use App\Entity\Terminal;
-use App\Repository\DestinationRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class TerminalModel
 {
+
+    /**
+     * @Assert\NotNull(message="Name is required")
+     */
     public $name;
 
     public Destination $destination;
 
     public $terminal;
 
-    public function __construct(string $name, Destination $destination = null)
+    public function __construct(string $name = null, Destination $destination = null)
     {
         $this->name = $name;
         $this->destination = $destination;
@@ -27,7 +28,7 @@ class TerminalModel
         $request = json_decode($request);
 
         return new static(
-            $request->name,
+            $request->name ?? null,
             $destination
         );
     }

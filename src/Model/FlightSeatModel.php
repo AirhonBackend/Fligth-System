@@ -3,30 +3,38 @@
 namespace App\Model;
 
 use App\Entity\Flight;
-use App\Entity\Airplane;
 use App\Entity\FlightSeat;
-use App\Entity\FlightSeatClasses;
-use App\Entity\Passenger;
-use App\Repository\FlightRepository;
-use App\Repository\FlightSeatClassesRepository;
-use App\Repository\FlightSeatRepository;
-use App\Repository\PassengerRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Illuminate\Support\Str;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class FlightSeatModel
 {
+    /**
+     * @Assert\NotNull(message="Seatnumber field is required")
+     */
     public $seatNumber;
 
     public $flight;
 
+    /**
+     * @Assert\NotNull(message="Airplane Id field is required")
+     */
     public $airplaneId;
 
+    /**
+     * @Assert\NotNull(message="Status field is required")
+     */
     public $status;
 
+    /**
+     * @Assert\NotNull(message="Passenger Id field is required")
+     */
     public $passengerId;
 
+    /**
+     * @Assert\NotNull(message="Flight seat class Id field is required")
+     */
     public $flightSeatClassId;
 
     public $flightSeatClass;
@@ -59,45 +67,11 @@ class FlightSeatModel
 
         return new static(
             Str::upper(Str::random(5)),
-            $flight,
-            $request->airplaneId,
-            'occupied',
-            $request->passengerId,
-            $request->flightSeatClassId
+            $flight ?? null,
+            $request->airplaneId ?? null,
+            'occupied' ?? null,
+            $request->passengerId ?? null,
+            $request->flightSeatClassId ?? null
         );
     }
-
-    // public function getPassenger(PassengerRepository $passengerRepository)
-    // {
-    //     return $passengerRepository->find($this->passengerId);
-    // }
-
-    // public function getFlightSeatClass(FlightSeatClassesRepository $flightSeatClassesRepository)
-    // {
-    //     return $flightSeatClassesRepository->find($this->flightSeatClassId);
-    // }
-
-    // public function bookFlight(EntityManagerInterface $entityManagerInterface): FlightSeat
-    // {
-    //     $passenger = $this->getPassenger($entityManagerInterface->getRepository(Passenger::class));
-    //     $flightSeatClass = $this->getFlightSeatClass($entityManagerInterface->getRepository(FlightSeatClasses::class));
-
-    //     if (!$passenger) {
-    //         throw new Exception('Passenger not found');
-    //     }
-
-    //     if (!$flightSeatClass) {
-    //         throw new Exception('Seat Class not found');
-    //     }
-
-    //     $this->flightSeat->setPassenger($passenger)
-    //         ->setFlightSeatClass($this->getFlightSeatClass($entityManagerInterface->getRepository(FlightSeatClasses::class)))
-    //         ->setStatus($this->status);
-
-    //     $this->flightSeat->getFlight()->decrementCapacity();
-
-    //     $entityManagerInterface->flush();
-
-    //     return $this->flightSeat;
-    // }
 }

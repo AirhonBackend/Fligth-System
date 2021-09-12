@@ -2,24 +2,35 @@
 
 namespace App\Model;
 
-use App\Entity\Passenger;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class PassengerModel
 {
+    /**
+     * @Assert\NotNull(message="First name field is required")
+     */
     public $firstName;
 
     public $middleName;
 
+    /**
+     * @Assert\NotNull(message="Last name field is required")
+     */
     public $lastName;
 
+    /**
+     * @Assert\NotNull(message="Age field is required")
+     */
     public $age;
 
+    /**
+     * @Assert\NotNull(message="Gender field is required")
+     */
     public $gender;
 
     public $passenger;
 
-    public function __construct(string $firstName, string $middleName = null, string $lastName, int $age, string $gender)
+    public function __construct(string $firstName = null, string $middleName = null, string $lastName = null, int $age = null, string $gender = null)
     {
         $this->firstName = $firstName;
         $this->middleName = $middleName;
@@ -33,27 +44,11 @@ class PassengerModel
         $request = json_decode($request);
 
         return new static(
-            $request->firstName,
-            $request->middleName,
-            $request->lastName,
-            $request->age,
-            $request->gender,
+            $request->firstName ?? null,
+            $request->middleName ?? null,
+            $request->lastName ?? null,
+            $request->age ?? null,
+            $request->gender ?? null,
         );
     }
-
-    // public function createPassenger(EntityManagerInterface $entityManagerInterface)
-    // {
-    //     $this->passenger = new Passenger();
-
-    //     $this->passenger->setFirstName($this->firstName)
-    //         ->setMiddleName($this->middleName ?? null)
-    //         ->setLastName($this->lastName)
-    //         ->setAge($this->age)
-    //         ->setGender($this->gender);
-
-    //     $entityManagerInterface->persist($this->passenger);
-    //     $entityManagerInterface->flush();
-
-    //     return $this->passenger;
-    // }
 }

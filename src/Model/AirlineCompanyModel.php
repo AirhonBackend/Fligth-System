@@ -5,11 +5,18 @@ namespace App\Model;
 use App\Entity\AirlineCompany;
 use App\Repository\AirlineCompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AirlineCompanyModel
 {
+    /**
+     * @Assert\NotNull(message="Carrier name is required")
+     */
     public $carrierName;
 
+    /**
+     * @Assert\NotNull(message="Headquarters is required")
+     */
     public $headQuarters;
 
     public $airlineCompany;
@@ -28,8 +35,8 @@ class AirlineCompanyModel
         $request = json_decode($request);
 
         return new static(
-            $request->carrierName,
-            $request->headQuarters
+            $request->carrierName ?? null,
+            $request->headQuarters ?? null
         );
     }
 
