@@ -8,6 +8,15 @@ class DestinationControllerTest extends ApiTestCase
 {
     public function testStoreDestination(): void
     {
+        $response = static::createClient()->request('POST', '/destinations', ['json' => []]);
+
+        $this->assertResponseStatusCodeSame(400);
+        $this->assertJsonContains([
+            'errors' => [
+                'name'   =>  ['Name is required'],
+            ]
+        ]);
+
         $response = static::createClient()->request('POST', '/destinations', ['json' => [
             'name'  =>  'North America'
         ]]);
@@ -25,5 +34,15 @@ class DestinationControllerTest extends ApiTestCase
             ['name' => 'North America'],
             ['name' => 'North America'],
         ]);
+    }
+
+    public function testShowDestinations(): void
+    {
+        $response = static::createClient()->request('GET', '/destinations/1');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(
+            ['name' => 'North America'],
+        );
     }
 }

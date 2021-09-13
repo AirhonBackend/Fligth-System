@@ -588,7 +588,7 @@ paths:
           description: Returns all errors
           content:
             application/json:
-              example: { "errors": { "name": ["Name is required"] } }
+              example: { "errors": { "name": ["Name field is required"] } }
 
   /terminals:
     get:

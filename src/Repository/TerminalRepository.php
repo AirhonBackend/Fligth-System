@@ -61,12 +61,16 @@ class TerminalRepository extends ServiceEntityRepository
     }
     */
 
-    public function save(TerminalModel $terminalModel)
+    public function save(TerminalModel $terminalModel, Terminal $terminalEntity = null)
     {
         $terminal = new Terminal();
 
+        if ($terminalEntity) {
+            $terminal = $terminalEntity;
+        }
+
         $terminal->setName($terminalModel->name)
-            ->setDestination($terminalModel->destination);
+            ->setDestination($terminalModel->destination ?? $terminal->getDestination());
 
         $this->getEntityManager()->persist($terminal);
         $this->getEntityManager()->flush();

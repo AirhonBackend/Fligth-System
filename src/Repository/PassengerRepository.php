@@ -49,9 +49,13 @@ class PassengerRepository extends ServiceEntityRepository
     }
     */
 
-    public function save(PassengerModel $passengerModel)
+    public function save(PassengerModel $passengerModel, Passenger $passengerEntity = null)
     {
         $passenger = new Passenger();
+
+        if ($passengerEntity) {
+            $passenger = $passengerEntity;
+        }
 
         $passenger->setFirstName($passengerModel->firstName)
             ->setMiddleName($passengerModel->middleName)

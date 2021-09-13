@@ -9,11 +9,11 @@ class TerminalModel
 {
 
     /**
-     * @Assert\NotNull(message="Name is required")
+     * @Assert\NotNull(message="Name field is required")
      */
     public $name;
 
-    public Destination $destination;
+    public $destination;
 
     public $terminal;
 
@@ -23,13 +23,13 @@ class TerminalModel
         $this->destination = $destination;
     }
 
-    public static function fromRequest($request, Destination $destination)
+    public static function fromRequest($request, Destination $destination = null)
     {
         $request = json_decode($request);
 
         return new static(
             $request->name ?? null,
-            $destination
+            $destination ?? null
         );
     }
 }

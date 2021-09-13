@@ -9,6 +9,16 @@ class AirplaneCompanyControlleTest extends ApiTestCase
     public function testStoreAirplane(): void
     {
 
+        $response = static::createClient()->request('POST', '/airlines/1/airplanes', ['json' => []]);
+
+        $this->assertResponseStatusCodeSame(400);
+        $this->assertJsonContains([
+            'errors' => [
+                'brand'   =>  ['Brand is required'],
+                'model'   =>  ['Model is required'],
+            ]
+        ]);
+
         $response = static::createClient()->request('POST', '/airlines/1/airplanes', ['json' => [
             'brand'  =>  'Toyota',
             'model'  =>   'TTOEA13'
@@ -36,5 +46,18 @@ class AirplaneCompanyControlleTest extends ApiTestCase
                 'model' => 'TTOEA13',
             ]
         ]);
+    }
+
+    public function testShowCollectionofAirplanes(): void
+    {
+        $response = static::createClient()->request('GET', '/airplanes/1');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(
+            [
+                'brand' => 'Toyota',
+                'model' => 'TTOEA13',
+            ]
+        );
     }
 }

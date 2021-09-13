@@ -3,7 +3,7 @@
 namespace App\Controller\Terminal;
 
 use App\Controller\ApiBaseController;
-use App\Entity\Destination;
+use App\Entity\Terminal;
 use App\Model\TerminalModel;
 use App\Repository\TerminalRepository;
 use App\Resource\TerminalResource;
@@ -11,15 +11,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateTerminalController extends ApiBaseController
+class UpdateTerminalController extends ApiBaseController
 {
     /**
-     * @Route("destinations/{id}/terminals", name="create_terminal", methods="POST")
+     * @Route("/terminals/{id}", name="update_terminal", methods="PUT")
      */
 
-    public function __invoke(Request $request, Destination $destination, TerminalRepository $terminalRepository): JsonResponse
+    public function __invoke(Request $request, Terminal $terminal, TerminalRepository $terminalRepository): JsonResponse
     {
-        $terminalDto = TerminalModel::fromRequest($request->getContent(), $destination);
+        $terminalDto = TerminalModel::fromRequest($request->getContent());
 
         $validation = $this->validator->validateDataObjects($terminalDto);
 
@@ -27,7 +27,7 @@ class CreateTerminalController extends ApiBaseController
             return $this->json(['errors' => $validation->getErrorMessages()], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        $response = new TerminalResource($terminalRepository->save($terminalDto));
+        $response = new TerminalResource($terminalRepository->save($terminalDto, $terminal));
 
         return $response->toJson();
     }
